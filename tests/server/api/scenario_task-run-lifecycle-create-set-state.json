@@ -1,0 +1,80 @@
+[
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"task_key\": \"trr-recorder-test-task\", \"dynamic_key\": \"lifecycle-step-0\", \"name\": \"recorder-test-run\"}",
+    "ResponseBody": "{\"id\": \"a7f3c912-b4d5-4e6f-8a9b-0c1d2e3f4a5b\", \"task_key\": \"trr-recorder-test-task\", \"dynamic_key\": \"lifecycle-step-0\", \"state\": {\"type\": \"PENDING\"}}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/task_runs/",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 4200,
+    "Timestamp": "2026-04-30T19:58:26.492Z",
+    "Scheme": "http"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"state\": {\"type\": \"RUNNING\", \"name\": \"Running\"}, \"force\": false}",
+    "ResponseBody": "{\"status\": \"ACCEPT\", \"state\": {\"type\": \"RUNNING\"}}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/task_runs/a7f3c912-b4d5-4e6f-8a9b-0c1d2e3f4a5b/set_state",
+    "QueryParams": {},
+    "StatusCode": 200,
+    "Port": 4200,
+    "Timestamp": "2026-04-30T19:58:26.492Z",
+    "Scheme": "http"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "",
+    "ResponseBody": "{\"id\": \"a7f3c912-b4d5-4e6f-8a9b-0c1d2e3f4a5b\", \"task_key\": \"trr-recorder-test-task\", \"dynamic_key\": \"lifecycle-step-0\", \"state\": {\"type\": \"RUNNING\"}}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "GET",
+    "Path": "/api/task_runs/a7f3c912-b4d5-4e6f-8a9b-0c1d2e3f4a5b",
+    "QueryParams": {},
+    "StatusCode": 200,
+    "Port": 4200,
+    "Timestamp": "2026-04-30T19:58:26.492Z",
+    "Scheme": "http"
+  }
+]
