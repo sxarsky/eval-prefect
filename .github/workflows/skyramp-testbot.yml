@@ -107,3 +107,14 @@ jobs:
           skyrampLicenseFile: ${{ secrets.SKYRAMP_LICENSE_FILE }}
           anthropicApiKey: ${{ secrets.SKYRAMP_TESTBOT_API_KEY }}
           githubToken: ${{ steps.app-token.outputs.token }}
+          skyrampMcpVersion: next
+          skyrampExecutorVersion: v1.3.14
+
+          targetSetupCommand: 'docker compose -f docker-compose.eval.yml up -d'
+          targetReadyCheckCommand: 'curl -sf http://localhost:4200/api/health'
+          targetReadyCheckTimeout: 180
+
+          testDirectory: 'tests/server/api'
+          autoCommit: true
+          postPrComment: true
+          enableDebug: true
