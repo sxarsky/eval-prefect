@@ -1,0 +1,132 @@
+[
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"name\": \"wpool-cancel-1746001234\", \"type\": \"process\"}",
+    "ResponseBody": "{\"id\": \"00000000-0000-0000-0000-000000000004\", \"name\": \"wpool-cancel-1746001234\"}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/work_pools",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 4200,
+    "Timestamp": "2026-04-30T23:42:35.221Z",
+    "Scheme": "http"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"name\": \"wpool-cancel-flow-1746001234\"}",
+    "ResponseBody": "{\"id\": \"00000000-0000-0000-0000-000000000005\", \"name\": \"wpool-cancel-flow-1746001234\"}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/flows",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 4200,
+    "Timestamp": "2026-04-30T23:42:35.221Z",
+    "Scheme": "http"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"flow_id\": \"00000000-0000-0000-0000-000000000005\", \"work_pool_name\": \"wpool-cancel-1746001234\"}",
+    "ResponseBody": "{\"id\": \"00000000-0000-0000-0000-000000000006\", \"state_type\": \"SCHEDULED\", \"start_time\": null, \"work_pool_name\": \"wpool-cancel-1746001234\"}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/flow_runs",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 4200,
+    "Timestamp": "2026-04-30T23:42:35.221Z",
+    "Scheme": "http"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"state\": {\"type\": \"CANCELLING\", \"name\": \"Cancelling\"}}",
+    "ResponseBody": "{\"state\": {\"type\": \"CANCELLING\", \"name\": \"Cancelling\"}, \"status\": \"ACCEPTED\"}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/flow_runs/00000000-0000-0000-0000-000000000006/set_state",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 4200,
+    "Timestamp": "2026-04-30T23:42:35.221Z",
+    "Scheme": "http"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "",
+    "ResponseBody": "{\"id\": \"00000000-0000-0000-0000-000000000006\", \"state_type\": \"CANCELLING\", \"start_time\": null, \"work_pool_name\": \"wpool-cancel-1746001234\"}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "GET",
+    "Path": "/api/flow_runs/00000000-0000-0000-0000-000000000006",
+    "QueryParams": {},
+    "StatusCode": 200,
+    "Port": 4200,
+    "Timestamp": "2026-04-30T23:42:35.221Z",
+    "Scheme": "http"
+  }
+]
