@@ -1,0 +1,106 @@
+[
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"name\": \"test-flow-anchored-1746000000\"}",
+    "ResponseBody": "{\"id\": \"44444444-4444-4444-4444-444444444444\", \"name\": \"test-flow-anchored-1746000000\"}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/flows",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 4200,
+    "Timestamp": "2026-04-30T22:19:50.744Z",
+    "Scheme": "http"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"name\": \"test-dep-anchored-1746000000\", \"flow_id\": \"44444444-4444-4444-4444-444444444444\"}",
+    "ResponseBody": "{\"id\": \"55555555-5555-5555-5555-555555555555\", \"name\": \"test-dep-anchored-1746000000\", \"flow_id\": \"44444444-4444-4444-4444-444444444444\"}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/deployments",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 4200,
+    "Timestamp": "2026-04-30T22:19:50.744Z",
+    "Scheme": "http"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"schedule\": {\"rrule\": \"DTSTART:20200101T000000\\nFREQ=HOURLY;INTERVAL=1\", \"timezone\": \"UTC\"}, \"active\": true}",
+    "ResponseBody": "{\"id\": \"66666666-6666-6666-6666-666666666666\", \"schedule\": {\"rrule\": \"DTSTART:20200101T000000\\nFREQ=HOURLY;INTERVAL=1\", \"timezone\": \"UTC\"}, \"active\": true, \"deployment_id\": \"55555555-5555-5555-5555-555555555555\"}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/deployments/55555555-5555-5555-5555-555555555555/schedules",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 4200,
+    "Timestamp": "2026-04-30T22:19:50.744Z",
+    "Scheme": "http"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "",
+    "ResponseBody": "[{\"id\": \"66666666-6666-6666-6666-666666666666\", \"schedule\": {\"rrule\": \"DTSTART:20200101T000000\\nFREQ=HOURLY;INTERVAL=1\", \"timezone\": \"UTC\"}, \"active\": true}]",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "GET",
+    "Path": "/api/deployments/55555555-5555-5555-5555-555555555555/schedules",
+    "QueryParams": {},
+    "StatusCode": 200,
+    "Port": 4200,
+    "Timestamp": "2026-04-30T22:19:50.744Z",
+    "Scheme": "http"
+  }
+]
