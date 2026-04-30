@@ -31,3 +31,4 @@ from . import (
     workers,
 )
 from . import server  # Server relies on all of the above routes
+# smoke-test
