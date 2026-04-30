@@ -113,6 +113,7 @@ jobs:
           targetSetupCommand: 'docker compose -f docker-compose.eval.yml up -d'
           targetReadyCheckCommand: 'curl -sf http://localhost:4200/api/health'
           targetReadyCheckTimeout: 180
+          authTokenCommand: 'echo skyramp-test-token'
 
           testDirectory: 'tests/server/api'
           autoCommit: true
