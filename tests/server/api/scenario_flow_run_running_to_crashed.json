@@ -1,0 +1,132 @@
+[
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"name\":\"crash-test-flow-1746000000\"}",
+    "ResponseBody": "{\"id\":\"cccccccc-cccc-cccc-cccc-cccccccccccc\",\"name\":\"crash-test-flow-1746000000\"}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/flows",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 4200,
+    "Timestamp": "2026-04-30T23:47:10.551Z",
+    "Scheme": "http"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"flow_id\":\"cccccccc-cccc-cccc-cccc-cccccccccccc\",\"name\":\"crash-test-run-1746000000\"}",
+    "ResponseBody": "{\"id\":\"dddddddd-dddd-dddd-dddd-dddddddddddd\",\"flow_id\":\"cccccccc-cccc-cccc-cccc-cccccccccccc\",\"state_type\":\"SCHEDULED\"}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/flow_runs",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 4200,
+    "Timestamp": "2026-04-30T23:47:10.551Z",
+    "Scheme": "http"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"state\":{\"type\":\"RUNNING\",\"name\":\"Running\"},\"force\":true}",
+    "ResponseBody": "{\"status\":\"ACCEPT\",\"state\":{\"type\":\"RUNNING\"}}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/flow_runs/dddddddd-dddd-dddd-dddd-dddddddddddd/set_state",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 4200,
+    "Timestamp": "2026-04-30T23:47:10.551Z",
+    "Scheme": "http"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"state\":{\"type\":\"CRASHED\",\"name\":\"Crashed\",\"message\":\"Process aborted (SIGABRT)\"},\"force\":true}",
+    "ResponseBody": "{\"status\":\"ACCEPT\",\"state\":{\"type\":\"CRASHED\"}}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/flow_runs/dddddddd-dddd-dddd-dddd-dddddddddddd/set_state",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 4200,
+    "Timestamp": "2026-04-30T23:47:10.551Z",
+    "Scheme": "http"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "",
+    "ResponseBody": "{\"id\":\"dddddddd-dddd-dddd-dddd-dddddddddddd\",\"state_type\":\"CRASHED\"}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "GET",
+    "Path": "/api/flow_runs/dddddddd-dddd-dddd-dddd-dddddddddddd",
+    "QueryParams": {},
+    "StatusCode": 200,
+    "Port": 4200,
+    "Timestamp": "2026-04-30T23:47:10.551Z",
+    "Scheme": "http"
+  }
+]
