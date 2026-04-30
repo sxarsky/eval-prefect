@@ -1,0 +1,34 @@
+# Skyramp Workspace Configuration for Prefect eval.
+# Uses SQLite via docker-compose.eval.yml — no external database needed.
+# Prefect API is unauthenticated by default. The pr-e scenario adds X-Admin-Key
+# requirement for DELETE /api/flows/{id} and DELETE /api/deployments/{id}.
+# Static token: SKYRAMP_TEST_TOKEN=skyramp-test-token (set in docker-compose.eval.yml).
+workspace:
+  repoName: sxarsky/eval-prefect
+  repoUrl: git@github.com:sxarsky/eval-prefect.git
+metadata:
+  schemaVersion: v1
+  mcpVersion: 1.0.0
+  executorVersion: v1.0.0
+services:
+  - serviceName: prefect-server
+    language: python
+    framework: pytest
+    testDirectory: tests/server/api
+    api:
+      authType: apiKey
+      authHeader: X-Admin-Key
+      baseUrl: http://localhost:4200/api
+    runtimeDetails:
+      runtime: local
+  - serviceName: prefect-ui
+    language: javascript
+    framework: playwright
+    testDirectory: ui-v2/e2e
+    api:
+      baseUrl: http://localhost:5173
+      authType: none
+      authHeader: ""
+    runtimeDetails:
+      runtime: docker
+      dockerNetwork: eval-prefect_default
