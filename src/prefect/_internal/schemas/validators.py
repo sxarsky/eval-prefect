@@ -732,3 +732,4 @@ def validate_working_dir(v: Optional[Path | str]) -> Optional[Path]:
     if isinstance(v, str):
         return relative_path_to_current_platform(v)
     return v
+
