@@ -1,5 +1,5 @@
 import { useNavigate } from "@tanstack/react-router";
-import { type JSX, useCallback, useState } from "react";
+import { type JSX, useCallback, useEffect, useState } from "react";
 import type { FlowRun } from "@/api/flow-runs";
 import type { Flow } from "@/api/flows";
 import type { components } from "@/api/prefect";
@@ -102,6 +102,50 @@ export default function FlowDetail({
 		onSelectFilter(new Set());
 		clearSet();
 	}, [onFlowRunSearchChange, onSelectFilter, clearSet]);
+
+	// Keyboard shortcuts: 1 / 2 / 3 switch the active tab to Runs /
+	// Deployments / Details. The handler ignores key events when the focus
+	// is in an input / textarea / contenteditable region or when any
+	// modifier key (Ctrl / Cmd / Alt / Shift) is held.
+	useEffect(() => {
+		const handleKeyDown = (event: KeyboardEvent) => {
+			if (event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) {
+				return;
+			}
+
+			const target = event.target as HTMLElement | null;
+			const tagName = target?.tagName;
+			if (
+				tagName === "INPUT" ||
+				tagName === "TEXTAREA" ||
+				target?.isContentEditable === true
+			) {
+				return;
+			}
+
+			let nextTab: "runs" | "deployments" | "details" | undefined;
+			if (event.key === "1") nextTab = "runs";
+			else if (event.key === "2") nextTab = "deployments";
+			else if (event.key === "3") nextTab = "details";
+
+			if (nextTab !== undefined) {
+				event.preventDefault();
+				const target = nextTab;
+				void navigate({
+					to: ".",
+					search: (prev) => ({
+						...prev,
+						tab: target,
+					}),
+				});
+			}
+		};
+
+		window.addEventListener("keydown", handleKeyDown);
+		return () => {
+			window.removeEventListener("keydown", handleKeyDown);
+		};
+	}, [navigate]);
 
 	return (
 		<>
