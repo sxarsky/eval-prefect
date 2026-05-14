@@ -98,6 +98,39 @@ async def read_variable_by_name(
     return core.Variable.model_validate(model, from_attributes=True)
 
 
+@router.get("/names")
+async def read_variable_names(
+    db: PrefectDBInterface = Depends(provide_database_interface),
+) -> dict:
+    """
+    List the names of all variables, with their creation timestamps.
+
+    This endpoint returns name-only metadata so callers can surface the
+    variable inventory (e.g., for autocomplete or admin dashboards) without
+    exposing variable values, which may contain secrets. Values are NEVER
+    included in the response.
+    """
+    async with db.session_context() as session:
+        rows = await models.variables.read_variables(
+            session=session,
+            variable_filter=None,
+            sort=sorting.VariableSort.NAME_ASC,
+            offset=0,
+            limit=500,
+        )
+
+    return {
+        "items": [
+            {
+                "name": row.name,
+                "value": row.value,
+                "created": row.created,
+            }
+            for row in rows
+        ]
+    }
+
+
 @router.post("/filter")
 async def read_variables(
     limit: int = LimitBody(),
