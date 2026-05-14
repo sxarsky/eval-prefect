@@ -1,0 +1,80 @@
+[
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"name\": \"LegacyPagTest-1747267200\"}",
+    "ResponseBody": "{\"id\": \"00000000-3333-0000-0000-000000000001\", \"name\": \"LegacyPagTest-1747267200\"}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/flows",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 4200,
+    "Timestamp": "2026-05-14T08:09:25.081Z",
+    "Scheme": "http"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"flow_id\": \"00000000-3333-0000-0000-000000000001\", \"name\": \"LegacyRun-1747267200\"}",
+    "ResponseBody": "{\"id\": \"00000000-4444-0000-0000-000000000001\", \"flow_id\": \"00000000-3333-0000-0000-000000000001\", \"name\": \"LegacyRun-1747267200\"}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/flow_runs",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 4200,
+    "Timestamp": "2026-05-14T08:09:25.081Z",
+    "Scheme": "http"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"offset\": 0, \"limit\": 5, \"flows\": {\"id\": {\"any_\": [\"00000000-3333-0000-0000-000000000001\"]}}}",
+    "ResponseBody": "[{\"id\": \"00000000-4444-0000-0000-000000000001\", \"name\": \"LegacyRun-1747267200\", \"flow_id\": \"00000000-3333-0000-0000-000000000001\"}]",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/flow_runs/filter",
+    "QueryParams": {},
+    "StatusCode": 200,
+    "Port": 4200,
+    "Timestamp": "2026-05-14T08:09:25.081Z",
+    "Scheme": "http"
+  }
+]
