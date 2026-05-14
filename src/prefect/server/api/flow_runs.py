@@ -536,6 +536,22 @@ async def read_flow_runs(
     sort: schemas.sorting.FlowRunSort = Body(schemas.sorting.FlowRunSort.ID_DESC),
     limit: int = dependencies.LimitBody(),
     offset: int = Body(0, ge=0),
+    page: Optional[int] = Body(
+        None,
+        ge=1,
+        description=(
+            "1-based page number. When supplied together with page_size, "
+            "replaces the legacy offset/limit paging behavior."
+        ),
+    ),
+    page_size: Optional[int] = Body(
+        None,
+        ge=1,
+        description=(
+            "Number of records per page. When supplied together with page, "
+            "replaces the legacy offset/limit paging behavior."
+        ),
+    ),
     flows: Optional[schemas.filters.FlowFilter] = None,
     flow_runs: Optional[schemas.filters.FlowRunFilter] = None,
     task_runs: Optional[schemas.filters.TaskRunFilter] = None,
@@ -547,6 +563,10 @@ async def read_flow_runs(
     """
     Query for flow runs.
     """
+    if page is not None and page_size is not None:
+        offset = page * page_size
+        limit = page_size
+
     async with db.session_context() as session:
         db_flow_runs = await models.flow_runs.read_flow_runs(
             session=session,
