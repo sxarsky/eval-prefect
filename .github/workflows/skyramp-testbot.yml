@@ -102,7 +102,7 @@ jobs:
           fetch-depth: 0
           token: ${{ steps.app-token.outputs.token }}
 
-      - uses: skyramp/testbot@883de23c16f1afdc8a829195c72497cba7f62e4e # v0.9.3
+      - uses: skyramp/testbot@e424c89ad41f20d2ae56cf1d6f20c94332017e2b # v0.10.2
         with:
           skyrampLicenseFile: ${{ secrets.SKYRAMP_LICENSE_FILE }}
           anthropicApiKey: ${{ secrets.SKYRAMP_TESTBOT_API_KEY }}
