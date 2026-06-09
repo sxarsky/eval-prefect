@@ -962,7 +962,9 @@ class WorkQueueCreate(ActionBaseModel):
 
     name: Name = Field(default=..., description="The name of the work queue.")
     description: Optional[str] = Field(
-        default="", description="An optional description for the work queue."
+        default="",
+        max_length=100,
+        description="An optional description for the work queue.",
     )
     is_paused: bool = Field(
         default=False, description="Whether or not the work queue is paused."
