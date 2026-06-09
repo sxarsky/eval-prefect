@@ -1,0 +1,54 @@
+[
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"name\": \"test-queue-health-check\"}",
+    "ResponseBody": "{\"id\": \"1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d\", \"name\": \"test-queue-health-check\", \"last_polled\": null}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/work_queues",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 4200,
+    "Timestamp": "2026-06-09T07:58:05.960Z",
+    "Scheme": "http"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "",
+    "ResponseBody": "{\"healthy\": false, \"late_runs_count\": 0, \"last_polled\": null, \"health_check_policy\": {\"maximum_late_runs\": 0, \"maximum_seconds_since_last_polled\": 120}}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "GET",
+    "Path": "/api/work_queues/1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d/status",
+    "QueryParams": {},
+    "StatusCode": 200,
+    "Port": 4200,
+    "Timestamp": "2026-06-09T07:58:05.960Z",
+    "Scheme": "http"
+  }
+]
