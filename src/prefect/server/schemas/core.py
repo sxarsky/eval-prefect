@@ -1052,19 +1052,25 @@ class WorkQueueHealthPolicy(PrefectBaseModel):
         return healthy
 
 
-class WorkQueueStatusDetail(PrefectBaseModel):
-    healthy: bool = Field(..., description="Whether or not the work queue is healthy.")
-    late_runs_count: int = Field(
-        default=0, description="The number of late flow runs in the work queue."
+class WorkQueueHealth(PrefectBaseModel):
+    is_healthy: bool = Field(
+        ..., description="Whether or not the work queue is healthy."
     )
-    last_polled: Optional[DateTime] = Field(
+    last_poll_time: Optional[DateTime] = Field(
         default=None, description="The last time an agent polled this queue for work."
     )
-    health_check_policy: WorkQueueHealthPolicy = Field(
-        ...,
-        description=(
-            "The policy used to determine whether or not the work queue is healthy."
-        ),
+
+
+class WorkQueueRunStats(PrefectBaseModel):
+    late_count: int = Field(default=0, description="The number of late flow runs.")
+
+
+class WorkQueueStatusDetail(PrefectBaseModel):
+    health: WorkQueueHealth = Field(
+        ..., description="Health summary for the work queue."
+    )
+    runs: WorkQueueRunStats = Field(
+        ..., description="Run backlog stats for the work queue."
     )
 
 
