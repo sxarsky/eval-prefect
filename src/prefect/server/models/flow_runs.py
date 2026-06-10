@@ -145,6 +145,20 @@ async def create_flow_run(
     return model
 
 
+async def enqueue_flow_run_creation(
+    session: AsyncSession,
+    flow_run: schemas.core.FlowRun,
+) -> orm_models.FlowRun:
+    """Enqueue creation of a flow run from a deployment for asynchronous
+    processing.
+
+    Stub implementation: the flow run is created inline and returned so the
+    caller can acknowledge with a job id. Standing up real asynchronous
+    execution (e.g. via docket) is out of scope for this change.
+    """
+    return await create_flow_run(session=session, flow_run=flow_run)
+
+
 @db_injector
 async def update_flow_run(
     db: PrefectDBInterface,
