@@ -678,10 +678,10 @@ async def read_work_queue_status(
     )
 
     return schemas.core.WorkQueueStatusDetail(
-        healthy=healthy,
-        late_runs_count=work_queue_late_runs_count,
-        last_polled=work_queue.last_polled,
-        health_check_policy=health_check_policy,
+        health=schemas.core.WorkQueueHealth(
+            is_healthy=healthy, last_poll_time=work_queue.last_polled
+        ),
+        runs=schemas.core.WorkQueueRunStats(late_count=work_queue_late_runs_count),
     )
 
 
