@@ -116,6 +116,7 @@ jobs:
           authTokenCommand: 'echo skyramp-test-token'
 
           testDirectory: 'tests/server/api'
+          generatedTestsMode: same-branch
           autoCommit: true
           postPrComment: true
           enableDebug: true
