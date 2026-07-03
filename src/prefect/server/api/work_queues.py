@@ -230,24 +230,6 @@ async def read_work_queues(
     return ret
 
 
-@router.delete("/{id:uuid}", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_work_queue(
-    work_queue_id: UUID = Path(..., description="The work queue id", alias="id"),
-    db: PrefectDBInterface = Depends(provide_database_interface),
-) -> None:
-    """
-    Delete a work queue by id.
-    """
-    async with db.session_context(begin_transaction=True) as session:
-        result = await models.work_queues.delete_work_queue(
-            session=session, work_queue_id=work_queue_id
-        )
-    if not result:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="work queue not found"
-        )
-
-
 @router.post("/{id:uuid}/concurrency_status")
 async def read_work_queue_concurrency_status(
     work_queue_id: UUID = Path(..., description="The work queue id", alias="id"),
