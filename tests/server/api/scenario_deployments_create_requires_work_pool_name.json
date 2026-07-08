@@ -1,0 +1,106 @@
+[
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"name\": \"flow-wpn-726fdc97\"}",
+    "ResponseBody": "{\"id\": \"3c352956-d0c6-408f-b248-230b32bace63\", \"name\": \"flow-wpn-726fdc97\"}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/flows/",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 4200,
+    "Timestamp": "2026-07-08T07:19:10.190Z",
+    "Scheme": "http"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"name\": \"wpn-pool-6e929d2c\", \"type\": \"process\"}",
+    "ResponseBody": "{\"name\": \"wpn-pool-6e929d2c\", \"type\": \"process\"}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/work_pools/",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 4200,
+    "Timestamp": "2026-07-08T07:19:10.190Z",
+    "Scheme": "http"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"name\": \"deployment-wpn-0e537985\", \"flow_id\": \"3c352956-d0c6-408f-b248-230b32bace63\", \"work_pool_name\": \"wpn-pool-6e929d2c\"}",
+    "ResponseBody": "{\"id\": \"9b1741e8-a4b5-4322-97ed-dcb3228155dd\", \"name\": \"deployment-wpn-0e537985\", \"flow_id\": \"3c352956-d0c6-408f-b248-230b32bace63\", \"work_pool_name\": \"wpn-pool-6e929d2c\"}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/deployments/",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 4200,
+    "Timestamp": "2026-07-08T07:19:10.190Z",
+    "Scheme": "http"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "",
+    "ResponseBody": "{\"id\": \"9b1741e8-a4b5-4322-97ed-dcb3228155dd\", \"work_pool_name\": \"wpn-pool-6e929d2c\", \"flow_id\": \"3c352956-d0c6-408f-b248-230b32bace63\"}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "GET",
+    "Path": "/api/deployments/9b1741e8-a4b5-4322-97ed-dcb3228155dd",
+    "QueryParams": {},
+    "StatusCode": 200,
+    "Port": 4200,
+    "Timestamp": "2026-07-08T07:19:10.190Z",
+    "Scheme": "http"
+  }
+]
