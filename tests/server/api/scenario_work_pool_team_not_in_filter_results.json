@@ -1,0 +1,48 @@
+[
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"name\": \"team-filter-test-1783831468\", \"type\": \"prefect-agent\", \"team\": \"sre-team\"}",
+    "ResponseBody": "{\"name\": \"team-filter-test-1783831468\", \"type\": \"prefect-agent\"}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/work_pools/",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 4200,
+    "Timestamp": "2026-07-12T04:44:49.835Z",
+    "Scheme": "http"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"work_pools\": {\"name\": {\"any_\": [\"team-filter-test-1783831468\"]}}}",
+    "ResponseBody": "[{\"name\": \"team-filter-test-1783831468\", \"type\": \"prefect-agent\"}]",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/work_pools/filter",
+    "QueryParams": {},
+    "StatusCode": 200,
+    "Port": 4200,
+    "Timestamp": "2026-07-12T04:44:49.835Z",
+    "Scheme": "http"
+  }
+]
