@@ -10,7 +10,7 @@
 # so `.:/app` binds to the patched source tree.
 services:
   prefect-server:
-    image: prefecthq/prefect:3-latest
+    image: prefecthq/prefect:3.6.24-python3.10
     working_dir: /app
     volumes:
       - .:/app

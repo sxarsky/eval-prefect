@@ -8,13 +8,13 @@ workspace:
   repoUrl: git@github.com:sxarsky/eval-prefect.git
 metadata:
   schemaVersion: v1
-  mcpVersion: 1.0.0
-  executorVersion: v1.0.0
+  mcpVersion: 0.3.0
+  executorVersion: v1.3.34
 services:
   - serviceName: prefect-server
     language: python
     framework: pytest
-    testDirectory: tests/server/api
+    testDirectory: tests/skyramp
     api:
       authType: apiKey
       authHeader: X-Admin-Key
