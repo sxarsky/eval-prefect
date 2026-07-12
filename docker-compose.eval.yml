@@ -1,16 +1,21 @@
 # Lightweight Prefect stack for eval. Uses SQLite — no separate database service.
 #
 # Starts a Prefect server from the patched source in the cloned repo by:
-#   1. Using `prefecthq/prefect:3-latest` as the base image (has all deps installed)
+#   1. Using `prefecthq/prefect:3.6.24-python3.10` as the base image (has all deps installed)
 #   2. Mounting the cloned repo at /app
 #   3. Reinstalling only the `prefect` package itself from source (`pip install --no-deps -e .`)
 #      — so our patched code runs but we keep the base image's compatible dependency tree
+#
+# IMPORTANT: pin the base image to the SOURCE version (3.6.24, python 3.10). The
+# moving `:3-latest` tag drifted to a newer FastAPI that removed router.routes
+# mutation, so `del router.routes` (server.py:413) 500'd every route. Matching the
+# image to the source restores the compatible dependency tree.
 #
 # Invoked by scripts/testbot/eval-testbot.sh with `--project-directory <cloned-repo>`
 # so `.:/app` binds to the patched source tree.
 services:
   prefect-server:
-    image: prefecthq/prefect:3-latest
+    image: prefecthq/prefect:3.6.24-python3.10
     working_dir: /app
     volumes:
       - .:/app
