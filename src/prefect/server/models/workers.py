@@ -64,7 +64,7 @@ async def create_work_pool(
 
     """
 
-    pool = db.WorkPool(**work_pool.model_dump(exclude={"active_slots"}))
+    pool = db.WorkPool(**work_pool.model_dump(exclude={"active_slots", "team"}))
 
     if pool.type != "prefect-agent":
         if pool.is_paused:
