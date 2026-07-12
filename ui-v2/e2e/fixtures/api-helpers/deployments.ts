@@ -1,5 +1,6 @@
 import type { components } from "@/api/prefect";
 import type { PrefectApiClient } from "../api-client";
+import { createWorkPool } from "./work-pools";
 
 export type Deployment = components["schemas"]["DeploymentResponse"];
 
@@ -19,6 +20,16 @@ export async function createDeployment(
 		}>;
 	},
 ): Promise<Deployment> {
+	// work_pool_name is required by the API as of this change; auto-provision
+	// a throwaway work pool for callers that don't care which pool is used.
+	const workPoolName =
+		params.workPoolName ??
+		(
+			await createWorkPool(client, {
+				name: `${params.name}-auto-work-pool`,
+			})
+		).name;
+
 	const { data, error } = await client.POST("/deployments/", {
 		body: {
 			name: params.name,
@@ -27,7 +38,7 @@ export async function createDeployment(
 			description: params.description,
 			paused: params.paused ?? false,
 			enforce_parameter_schema: true,
-			work_pool_name: params.workPoolName,
+			work_pool_name: workPoolName,
 			work_queue_name: params.workQueueName,
 			schedules: params.schedules,
 		},

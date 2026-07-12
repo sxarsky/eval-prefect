@@ -33,7 +33,7 @@ if TYPE_CHECKING:
 
 class TestRunDeployment:
     @pytest.fixture
-    async def test_deployment(self, prefect_client: PrefectClient):
+    async def test_deployment(self, prefect_client: PrefectClient, work_pool):
         flow_name = f"foo-{uuid4()}"
         flow_id = await prefect_client.create_flow_from_name(flow_name)
 
@@ -41,6 +41,7 @@ class TestRunDeployment:
             name=f"foo-deployment-{uuid4()}",
             flow_id=flow_id,
             parameter_openapi_schema={"type": "object", "properties": {}},
+            work_pool_name=work_pool.name,
         )
         deployment = await prefect_client.read_deployment(deployment_id)
 
@@ -506,6 +507,7 @@ class TestRunDeployment:
         test_deployment,
         instrumentation: InstrumentationTester,
         prefect_client: "PrefectClient",
+        work_pool,
     ):
         """Test that OTEL trace context gets propagated from parent flow to deployment flow run"""
         _, flow_name = test_deployment
@@ -520,6 +522,7 @@ class TestRunDeployment:
             name=f"foo-deployment-{uuid4()}",
             flow_id=flow_id,
             parameter_openapi_schema={"type": "object", "properties": {}},
+            work_pool_name=work_pool.name,
         )
         deployment = await prefect_client.read_deployment(deployment_id)
         child_flow_name = child_flow.name
@@ -611,7 +614,7 @@ class TestArunDeployment:
     """Tests for the explicit async arun_deployment function."""
 
     @pytest.fixture
-    async def test_deployment(self, prefect_client: PrefectClient):
+    async def test_deployment(self, prefect_client: PrefectClient, work_pool):
         flow_name = f"foo-{uuid4()}"
         flow_id = await prefect_client.create_flow_from_name(flow_name)
 
@@ -619,6 +622,7 @@ class TestArunDeployment:
             name=f"foo-deployment-{uuid4()}",
             flow_id=flow_id,
             parameter_openapi_schema={"type": "object", "properties": {}},
+            work_pool_name=work_pool.name,
         )
         deployment = await prefect_client.read_deployment(deployment_id)
 
@@ -793,7 +797,7 @@ class TestRunDeploymentSyncContext:
     """Tests for run_deployment behavior in sync context."""
 
     @pytest.fixture
-    def test_deployment_sync(self, sync_prefect_client):
+    def test_deployment_sync(self, sync_prefect_client, work_pool):
         flow_name = f"foo-sync-{uuid4()}"
         flow_id = sync_prefect_client.create_flow_from_name(flow_name)
 
@@ -801,6 +805,7 @@ class TestRunDeploymentSyncContext:
             name=f"foo-sync-deployment-{uuid4()}",
             flow_id=flow_id,
             parameter_openapi_schema={"type": "object", "properties": {}},
+            work_pool_name=work_pool.name,
         )
         deployment = sync_prefect_client.read_deployment(deployment_id)
 
@@ -895,7 +900,7 @@ class TestAsyncDispatchBehavior:
     """Tests to verify async_dispatch routes correctly between sync and async."""
 
     @pytest.fixture
-    async def test_deployment(self, prefect_client: PrefectClient):
+    async def test_deployment(self, prefect_client: PrefectClient, work_pool):
         flow_name = f"dispatch-test-{uuid4()}"
         flow_id = await prefect_client.create_flow_from_name(flow_name)
 
@@ -903,6 +908,7 @@ class TestAsyncDispatchBehavior:
             name=f"dispatch-deployment-{uuid4()}",
             flow_id=flow_id,
             parameter_openapi_schema={"type": "object", "properties": {}},
+            work_pool_name=work_pool.name,
         )
         deployment = await prefect_client.read_deployment(deployment_id)
 

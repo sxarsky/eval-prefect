@@ -581,6 +581,7 @@ async def test_deployment_runs_with_job_variables(
 async def test_deployment_run_without_parameter_openapi_schema(
     flow: Any,
     prefect_client: prefect.client.orchestration.PrefectClient,
+    work_pool,
 ):
     """
     Verify that deployments created without a parameter_openapi_schema
@@ -594,6 +595,7 @@ async def test_deployment_run_without_parameter_openapi_schema(
     deployment_id = await prefect_client.create_deployment(
         flow_id=flow_id,
         name="test-deployment-no-schema",
+        work_pool_name=work_pool.name,
     )
 
     deployment = await prefect_client.read_deployment(deployment_id)

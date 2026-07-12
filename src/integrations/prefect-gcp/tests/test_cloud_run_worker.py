@@ -663,6 +663,7 @@ class TestCloudRunWorkerValidConfiguration:
             name="my-deployment",
             flow_id=uuid.uuid4(),
             job_variables={"region": "test-region1", "cpu": cpu},
+            work_pool_name="test-work-pool",
         )
         with pytest.raises(PrefectValidationError) as exc:
             deployment.check_valid_configuration(
@@ -677,6 +678,7 @@ class TestCloudRunWorkerValidConfiguration:
             name="my-deployment",
             flow_id=uuid.uuid4(),
             job_variables={"region": "test-region1", "cpu": cpu},
+            work_pool_name="test-work-pool",
         )
         deployment.check_valid_configuration(
             CloudRunWorker.get_default_base_job_template()
@@ -688,6 +690,7 @@ class TestCloudRunWorkerValidConfiguration:
             name="my-deployment",
             flow_id=uuid.uuid4(),
             job_variables={"region": "test-region1", "memory": memory},
+            work_pool_name="test-work-pool",
         )
         with pytest.raises(PrefectValidationError) as exc:
             deployment.check_valid_configuration(
@@ -701,6 +704,7 @@ class TestCloudRunWorkerValidConfiguration:
             name="my-deployment",
             flow_id=uuid.uuid4(),
             job_variables={"region": "test-region1", "memory": memory},
+            work_pool_name="test-work-pool",
         )
         deployment.check_valid_configuration(
             CloudRunWorker.get_default_base_job_template()

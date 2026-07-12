@@ -61,11 +61,12 @@ async def test_validation_error_handler_422(client):
     assert response.json()["request_body"] == bad_flow_data
 
 
-async def test_validation_error_handler_409(client):
+async def test_validation_error_handler_409(client, work_pool):
     # generate deployment with invalid foreign key
     bad_deployment_data = {
         "name": "my-deployment",
         "flow_id": str(uuid4()),
+        "work_pool_name": work_pool.name,
     }
     response = await client.post("/deployments/", json=bad_deployment_data)
     assert response.status_code == status.HTTP_409_CONFLICT
