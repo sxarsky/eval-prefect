@@ -931,6 +931,10 @@ class WorkPoolCreate(ActionBaseModel):
         default=None, description="A concurrency limit for the work pool."
     )
 
+    team: Optional[str] = Field(
+        default=None, description="An optional owning team label for the work pool."
+    )
+
     storage_configuration: schemas.core.WorkPoolStorageConfiguration = Field(
         default_factory=schemas.core.WorkPoolStorageConfiguration,
         description="The storage configuration for the work pool.",
