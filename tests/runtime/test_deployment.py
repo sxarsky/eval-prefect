@@ -6,13 +6,14 @@ from prefect.runtime import deployment
 
 
 @pytest.fixture
-async def deployment_id(flow, prefect_client):
+async def deployment_id(flow, prefect_client, work_pool):
     response = await prefect_client.create_deployment(
         name="My Deployment",
         version="gold",
         flow_id=flow.id,
         tags=["foo"],
         parameters={"foo": "bar"},
+        work_pool_name=work_pool.name,
     )
     return response
 

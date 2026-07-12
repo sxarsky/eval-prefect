@@ -5,7 +5,7 @@ from uuid import uuid4
 from starlette import status
 
 
-async def test_create_deployment(client):
+async def test_create_deployment(client, work_pool):
     flow_name = f"flow-{uuid4().hex}"
     flow_response = await client.post("/flows/", json={"name": flow_name})
     assert flow_response.status_code == status.HTTP_201_CREATED
@@ -14,7 +14,11 @@ async def test_create_deployment(client):
     deployment_name = f"dep-{uuid4().hex}"
     response = await client.post(
         "/deployments/",
-        json={"name": deployment_name, "flow_id": flow_id},
+        json={
+            "name": deployment_name,
+            "flow_id": flow_id,
+            "work_pool_name": work_pool.name,
+        },
     )
 
     assert response.status_code == status.HTTP_201_CREATED

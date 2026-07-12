@@ -1433,11 +1433,13 @@ class TestDeploymentDelete:
         self,
         prefect_client: PrefectClient,
         flojo_deployment: DeploymentResponse,
+        work_pool,
     ):
         for i in range(3):
             await prefect_client.create_deployment(
                 flow_id=flojo_deployment.flow_id,
                 name=f"test-deployment-{i}",
+                work_pool_name=work_pool.name,
             )
 
     @pytest.mark.usefixtures("setup_many_deployments")
@@ -1481,11 +1483,13 @@ class TestDeploymentList:
         self,
         prefect_client: PrefectClient,
         flojo_deployment: DeploymentResponse,
+        work_pool,
     ):
         for i in range(3):
             await prefect_client.create_deployment(
                 flow_id=flojo_deployment.flow_id,
                 name=f"test-deployment-{i}",
+                work_pool_name=work_pool.name,
             )
 
     @pytest.mark.usefixtures("setup_many_deployments")

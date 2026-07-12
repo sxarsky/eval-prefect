@@ -43,6 +43,7 @@ def assert_status_events(deployment_name: str, events: List[str]):
 class TestCreateDeployment:
     async def test_create_oldstyle_deployment(
         self,
+        work_pool,
         session,
         hosted_api_client,
         flow,
@@ -50,6 +51,7 @@ class TestCreateDeployment:
         storage_document_id,
     ):
         data = DeploymentCreate(
+            work_pool_name=work_pool.name,
             name="My Deployment",
             version="mint",
             flow_id=flow.id,
@@ -76,6 +78,7 @@ class TestCreateDeployment:
 
     async def test_create_deployment(
         self,
+        work_pool,
         session,
         hosted_api_client,
         flow,
@@ -83,6 +86,7 @@ class TestCreateDeployment:
         storage_document_id,
     ):
         data = DeploymentCreate(
+            work_pool_name=work_pool.name,
             name="My Deployment",
             version="mint",
             path="/",
@@ -118,6 +122,7 @@ class TestCreateDeployment:
 
     async def test_create_deployment_with_single_schedule(
         self,
+        work_pool,
         session,
         client,
         flow,
@@ -127,6 +132,7 @@ class TestCreateDeployment:
         )
 
         data = DeploymentCreate(  # type: ignore
+            work_pool_name=work_pool.name,
             name="My Deployment",
             version="mint",
             flow_id=flow.id,
@@ -159,6 +165,7 @@ class TestCreateDeployment:
 
     async def test_create_deployment_with_multiple_schedules(
         self,
+        work_pool,
         client,
         flow,
     ):
@@ -170,6 +177,7 @@ class TestCreateDeployment:
         )
 
         data = DeploymentCreate(  # type: ignore
+            work_pool_name=work_pool.name,
             name="My Deployment",
             version="mint",
             flow_id=flow.id,
@@ -212,6 +220,7 @@ class TestCreateDeployment:
 
     async def test_create_deployment_with_multiple_schedules_populates_legacy_schedule(
         self,
+        work_pool,
         session,
         client,
         flow,
@@ -224,6 +233,7 @@ class TestCreateDeployment:
         )
 
         data = DeploymentCreate(  # type: ignore
+            work_pool_name=work_pool.name,
             name="My Deployment",
             version="mint",
             flow_id=flow.id,
@@ -278,6 +288,10 @@ class TestCreateDeployment:
         assert schedules[0].id == first_schedule.id
 
     async def test_default_work_queue_name_is_none(self, session, client, flow):
+        # NOTE: this test's premise (a deployment created with no work pool at all
+        # has no work queue) is no longer expressible now that `work_pool_name` is
+        # required on DeploymentCreate. Left intentionally unfixed to surface the
+        # regression rather than silently changing what this test verifies.
         data = DeploymentCreate(name="My Deployment", flow_id=flow.id).model_dump(
             mode="json"
         )
@@ -287,12 +301,14 @@ class TestCreateDeployment:
 
     async def test_create_deployment_respects_flow_id_name_uniqueness(
         self,
+        work_pool,
         session,
         hosted_api_client,
         flow,
         storage_document_id,
     ):
         data = DeploymentCreate(
+            work_pool_name=work_pool.name,
             name="My Deployment",
             flow_id=flow.id,
             paused=True,
@@ -305,6 +321,7 @@ class TestCreateDeployment:
 
         # post the same data
         data = DeploymentCreate(
+            work_pool_name=work_pool.name,
             name="My Deployment",
             flow_id=flow.id,
             paused=True,
@@ -319,6 +336,7 @@ class TestCreateDeployment:
 
         # post different data, upsert should be respected
         data = DeploymentCreate(
+            work_pool_name=work_pool.name,
             name="My Deployment",
             flow_id=flow.id,
             paused=False,  # CHANGED
@@ -332,12 +350,14 @@ class TestCreateDeployment:
 
     async def test_create_deployment_populates_and_returned_created(
         self,
+        work_pool,
         client,
         flow,
     ):
         current_time = now_fn("UTC")
 
         data = DeploymentCreate(
+            work_pool_name=work_pool.name,
             name="My Deployment",
             flow_id=flow.id,
         ).model_dump(mode="json")
@@ -348,7 +368,7 @@ class TestCreateDeployment:
         assert parse_datetime(response.json()["updated"]) >= current_time
 
     async def test_creating_deployment_with_inactive_schedule_creates_no_runs(
-        self, session, client, flow
+        self, work_pool, session, client, flow
     ):
         n_runs = await models.flow_runs.count_flow_runs(session)
         assert n_runs == 0
@@ -356,6 +376,7 @@ class TestCreateDeployment:
         await client.post(
             "/deployments/",
             json=DeploymentCreate(
+                work_pool_name=work_pool.name,
                 name="My Deployment",
                 flow_id=flow.id,
                 schedules=[
@@ -378,7 +399,7 @@ class TestCreateDeployment:
         assert n_runs == 0
 
     async def test_creating_deployment_with_no_schedule_creates_no_runs(
-        self, session, client, flow
+        self, work_pool, session, client, flow
     ):
         n_runs = await models.flow_runs.count_flow_runs(session)
         assert n_runs == 0
@@ -386,6 +407,7 @@ class TestCreateDeployment:
         await client.post(
             "/deployments/",
             json=DeploymentCreate(
+                work_pool_name=work_pool.name,
                 name="My Deployment",
                 flow_id=flow.id,
                 paused=False,
@@ -398,7 +420,7 @@ class TestCreateDeployment:
         assert n_runs == 0
 
     async def test_creating_deployment_with_global_concurrency_limit_id(
-        self, session, client, flow
+        self, work_pool, session, client, flow
     ):
         # Create a global concurrency limit
         concurrency_limit = await models.concurrency_limits_v2.create_concurrency_limit(
@@ -414,6 +436,7 @@ class TestCreateDeployment:
         response = await client.post(
             "/deployments/",
             json=DeploymentCreate(
+                work_pool_name=work_pool.name,
                 name="My Deployment1",
                 flow_id=flow.id,
                 global_concurrency_limit_id=concurrency_limit.id,  # Changed from global_concurrency_limit_id
@@ -459,7 +482,7 @@ class TestCreateDeployment:
         )
 
     async def test_upserting_deployment_with_inactive_schedule_deletes_existing_auto_scheduled_runs(
-        self, client, deployment, session
+        self, work_pool, client, deployment, session
     ):
         # schedule runs
         await models.deployments.schedule_runs(
@@ -485,6 +508,7 @@ class TestCreateDeployment:
         await client.post(
             "/deployments/",
             json=schemas.actions.DeploymentCreate(
+                work_pool_name=work_pool.name,
                 name=deployment.name,
                 flow_id=deployment.flow_id,
                 schedules=[
@@ -501,6 +525,7 @@ class TestCreateDeployment:
 
     async def test_upserting_deployment_with_new_schedule_deletes_existing_auto_scheduled_runs(
         self,
+        work_pool,
         client,
         deployment,
         session,
@@ -530,6 +555,7 @@ class TestCreateDeployment:
         await client.post(
             "/deployments/",
             json=schemas.actions.DeploymentCreate(
+                work_pool_name=work_pool.name,
                 name=deployment.name,
                 flow_id=deployment.flow_id,
                 schedules=[
@@ -558,11 +584,13 @@ class TestCreateDeployment:
 
     async def test_create_deployment_throws_useful_error_on_missing_blocks(
         self,
+        work_pool,
         client,
         flow,
         storage_document_id,
     ):
         data = DeploymentCreate(
+            work_pool_name=work_pool.name,
             name="My Deployment",
             flow_id=flow.id,
             tags=["foo"],
@@ -743,6 +771,7 @@ class TestCreateDeployment:
     )
     async def test_create_deployment_ignores_required_fields(
         self,
+        work_pool,
         client,
         flow,
         session,
@@ -832,6 +861,7 @@ class TestCreateDeployment:
     )
     async def test_create_deployment_with_job_variables_succeeds(
         self,
+        work_pool,
         client,
         flow,
         session,
@@ -1074,12 +1104,14 @@ class TestCreateDeployment:
 
     async def test_can_pause_deployment_by_upserting_paused(
         self,
+        work_pool,
         client,
         deployment,
     ):
         assert deployment.paused is False
 
         data = DeploymentCreate(  # type: ignore
+            work_pool_name=work_pool.name,
             name=deployment.name,
             flow_id=deployment.flow_id,
             paused=True,
@@ -1155,11 +1187,13 @@ class TestCreateDeployment:
 
     async def test_upsert_deployment_can_remove_schedules(
         self,
+        work_pool,
         client: AsyncClient,
         flow: Flow,
     ):
         # Create deployment with a schedule
         data = DeploymentCreate(  # type: ignore
+            work_pool_name=work_pool.name,
             name="Deployment with schedules",
             flow_id=flow.id,
             schedules=[
@@ -1204,11 +1238,13 @@ class TestCreateDeployment:
 
     async def test_create_deployment_with_small_parameters_succeeds(
         self,
+        work_pool,
         client: AsyncClient,
         flow: Flow,
     ):
         small_params = {"data": "x" * 100}
         data = DeploymentCreate(
+            work_pool_name=work_pool.name,
             name="Small Params Deployment",
             flow_id=flow.id,
             parameters=small_params,
@@ -1710,6 +1746,7 @@ class TestUpdateDeployment:
 
     async def test_update_deployment_enforces_new_parameter_schema(
         self,
+        work_pool,
         flow,
         client,
     ):
@@ -1723,6 +1760,7 @@ class TestUpdateDeployment:
         new_schema = parameter_schema(byebye).model_dump_for_openapi()
 
         data = DeploymentCreate(  # type: ignore
+            work_pool_name=work_pool.name,
             name="test-patch",
             flow_id=flow.id,
             enforce_parameter_schema=True,
@@ -1772,6 +1810,7 @@ class TestUpdateDeployment:
 
     async def test_update_deployment_allows_the_clearing_of_parameters_when_provided(
         self,
+        work_pool,
         flow,
         client,
         session,
@@ -1782,6 +1821,7 @@ class TestUpdateDeployment:
         schema = parameter_schema(hello).model_dump_for_openapi()
 
         data = DeploymentCreate(  # type: ignore
+            work_pool_name=work_pool.name,
             name="test-patch-2",
             flow_id=flow.id,
             enforce_parameter_schema=True,
@@ -2065,7 +2105,7 @@ class TestUpdateDeployment:
         assert response.json()["schedules"] == []
 
     async def test_update_deployment_with_multiple_schedules(
-        self, session, client, flow, simple_parameter_schema
+        self, work_pool, session, client, flow, simple_parameter_schema
     ):
         schedule1 = schemas.schedules.IntervalSchedule(
             interval=datetime.timedelta(days=1)
@@ -2075,6 +2115,7 @@ class TestUpdateDeployment:
         )
 
         data = DeploymentCreate(  # type: ignore
+            work_pool_name=work_pool.name,
             name="My Deployment",
             version="mint",
             flow_id=flow.id,
@@ -2146,6 +2187,7 @@ class TestUpdateDeployment:
 
     async def test_update_deployment_with_multiple_schedules_and_existing_slugs(
         self,
+        work_pool,
         client,
         flow,
     ):
@@ -2161,6 +2203,7 @@ class TestUpdateDeployment:
         )
 
         data = DeploymentCreate(  # type: ignore
+            work_pool_name=work_pool.name,
             name="My Deployment",
             version="mint",
             flow_id=flow.id,
@@ -2240,6 +2283,7 @@ class TestUpdateDeployment:
 
     async def test_update_schedule_without_slug_and_specifying_active_defaults_to_true(
         self,
+        work_pool,
         client,
         flow,
     ):
@@ -2251,6 +2295,7 @@ class TestUpdateDeployment:
             interval=datetime.timedelta(days=2)
         )
         data = DeploymentCreate(
+            work_pool_name=work_pool.name,
             name="My Deployment",
             version="mint",
             flow_id=flow.id,
@@ -2294,6 +2339,7 @@ class TestUpdateDeployment:
 
     async def test_update_deployment_with_multiple_schedules_and_existing_slugs_422(
         self,
+        work_pool,
         client,
         flow,
     ):
@@ -2305,6 +2351,7 @@ class TestUpdateDeployment:
         )
 
         data = DeploymentCreate(  # type: ignore
+            work_pool_name=work_pool.name,
             name="My Deployment",
             version="mint",
             flow_id=flow.id,
@@ -2349,6 +2396,7 @@ class TestUpdateDeployment:
 
     async def test_update_deployment_with_multiple_schedules_add_schedule(
         self,
+        work_pool,
         client,
         flow,
     ):
@@ -2360,6 +2408,7 @@ class TestUpdateDeployment:
         )
 
         data = DeploymentCreate(  # type: ignore
+            work_pool_name=work_pool.name,
             name="My Deployment",
             version="mint",
             flow_id=flow.id,
@@ -2421,6 +2470,7 @@ class TestUpdateDeployment:
 
     async def test_update_deployment_with_multiple_schedules_add_incomplete_schedule(
         self,
+        work_pool,
         client,
         flow,
     ):
@@ -2433,6 +2483,7 @@ class TestUpdateDeployment:
         )
 
         data = DeploymentCreate(
+            work_pool_name=work_pool.name,
             name="My Deployment",
             version="mint",
             flow_id=flow.id,
@@ -2636,6 +2687,7 @@ class TestUpdateDeployment:
 
     async def test_update_deployment_schedule_with_replaces_renames_slug(
         self,
+        work_pool,
         client: AsyncClient,
         flow: Flow,
     ):
@@ -2646,6 +2698,7 @@ class TestUpdateDeployment:
 
         # Create deployment with initial schedule
         data = DeploymentCreate(  # type: ignore
+            work_pool_name=work_pool.name,
             name="test-deployment-replaces",
             flow_id=flow.id,
             schedules=[
@@ -2690,6 +2743,7 @@ class TestUpdateDeployment:
 
     async def test_update_deployment_schedule_replaces_nonexistent_slug_warns_and_creates(
         self,
+        work_pool,
         client: AsyncClient,
         flow: Flow,
     ):
@@ -2700,6 +2754,7 @@ class TestUpdateDeployment:
 
         # Create deployment with initial schedule
         data = DeploymentCreate(  # type: ignore
+            work_pool_name=work_pool.name,
             name="test-deployment-replaces-nonexistent",
             flow_id=flow.id,
             schedules=[
@@ -2745,6 +2800,7 @@ class TestUpdateDeployment:
 
     async def test_update_deployment_schedule_multiple_replaces_same_target_errors(
         self,
+        work_pool,
         client: AsyncClient,
         flow: Flow,
     ):
@@ -2755,6 +2811,7 @@ class TestUpdateDeployment:
 
         # Create deployment with initial schedule
         data = DeploymentCreate(  # type: ignore
+            work_pool_name=work_pool.name,
             name="test-deployment-replaces-conflict",
             flow_id=flow.id,
             schedules=[
@@ -2801,6 +2858,7 @@ class TestUpdateDeployment:
 
     async def test_update_deployment_schedule_replaces_collision_with_existing_slug(
         self,
+        work_pool,
         client: AsyncClient,
         flow: Flow,
     ):
@@ -2814,6 +2872,7 @@ class TestUpdateDeployment:
 
         # Create deployment with two schedules
         data = DeploymentCreate(  # type: ignore
+            work_pool_name=work_pool.name,
             name="test-deployment-replaces-collision",
             flow_id=flow.id,
             schedules=[
@@ -2860,11 +2919,13 @@ class TestUpdateDeployment:
 
     async def test_update_deployment_schedule_replaces_chain_rename(
         self,
+        work_pool,
         client: AsyncClient,
         flow: Flow,
     ):
         """Chain rename (a->b, b->c) should update both schedules without collisions."""
         data = DeploymentCreate(  # type: ignore
+            work_pool_name=work_pool.name,
             name="test-deployment-chain-rename",
             flow_id=flow.id,
             schedules=[
@@ -2918,11 +2979,13 @@ class TestUpdateDeployment:
 
     async def test_update_deployment_schedule_replaces_slug_swap(
         self,
+        work_pool,
         client: AsyncClient,
         flow: Flow,
     ):
         """Slug swap (x->y, y->x) should update both schedules without collisions."""
         data = DeploymentCreate(  # type: ignore
+            work_pool_name=work_pool.name,
             name="test-deployment-slug-swap",
             flow_id=flow.id,
             schedules=[
@@ -4124,9 +4187,10 @@ class TestDeploymentCRUDEvents:
         )
 
     async def test_create_deployment_emits_created_event(
-        self, client, flow, flow_function
+        self, work_pool, client, flow, flow_function
     ):
         data = DeploymentCreate(
+            work_pool_name=work_pool.name,
             name="events-test-deployment",
             flow_id=flow.id,
         ).model_dump(mode="json")
@@ -4150,9 +4214,10 @@ class TestDeploymentCRUDEvents:
         )
 
     async def test_upsert_existing_deployment_emits_updated_event(
-        self, client, deployment, flow
+        self, work_pool, client, deployment, flow
     ):
         data = DeploymentCreate(
+            work_pool_name=work_pool.name,
             name=deployment.name,
             flow_id=flow.id,
             description="updated via upsert",
@@ -4248,13 +4313,13 @@ class TestDeploymentCRUDEvents:
         )
 
     async def test_bulk_delete_deployments_emits_deleted_events(
-        self, client, flow, session
+        self, work_pool, client, flow, session
     ):
         # Create two deployments
-        dep1_data = DeploymentCreate(name="bulk-del-1", flow_id=flow.id).model_dump(
+        dep1_data = DeploymentCreate(name="bulk-del-1", flow_id=flow.id, work_pool_name=work_pool.name).model_dump(
             mode="json"
         )
-        dep2_data = DeploymentCreate(name="bulk-del-2", flow_id=flow.id).model_dump(
+        dep2_data = DeploymentCreate(name="bulk-del-2", flow_id=flow.id, work_pool_name=work_pool.name).model_dump(
             mode="json"
         )
         r1 = await client.post("/deployments/", json=dep1_data)
