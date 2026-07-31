@@ -202,4 +202,28 @@ def docket(request: Request) -> Docket_:
     return request.app.state.docket
 
 
+def require_admin_key(
+    x_admin_key: Optional[str] = Header(None, alias="X-Admin-Key"),
+) -> None:
+    """
+    Validate the X-Admin-Key request header against the
+    PREFECT_SERVER_ADMIN_API_KEY environment variable. Used to gate
+    destructive operations on flows and deployments.
+
+    When the env var is unset, the dependency is a no-op (backward compatible
+    for deployments that have not opted in). When the env var is set, the
+    request must include a matching X-Admin-Key header or a 401 is returned.
+    """
+    import os
+
+    expected = os.environ.get("PREFECT_SERVER_ADMIN_API_KEY")
+    if not expected:
+        return
+    if not x_admin_key or x_admin_key != expected:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="X-Admin-Key header is required for this operation.",
+        )
+
+
 Docket = Annotated[Docket_, Depends(docket)]

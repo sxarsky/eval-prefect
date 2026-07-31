@@ -151,7 +151,11 @@ async def read_flows(
         )
 
 
-@router.delete("/{id:uuid}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete(
+    "/{id:uuid}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    dependencies=[Depends(dependencies.require_admin_key)],
+)
 async def delete_flow(
     flow_id: UUID = Path(..., description="The flow id", alias="id"),
     db: PrefectDBInterface = Depends(provide_database_interface),
