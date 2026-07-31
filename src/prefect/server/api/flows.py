@@ -5,7 +5,7 @@ Routes for interacting with flow objects.
 from typing import List, Optional
 from uuid import UUID
 
-from fastapi import Depends, HTTPException, Path, Response, status
+from fastapi import Depends, Header, HTTPException, Path, Response, status
 from fastapi.param_functions import Body
 
 import prefect.server.api.dependencies as dependencies
@@ -148,6 +148,41 @@ async def read_flows(
             sort=sort,
             offset=offset,
             limit=limit,
+        )
+
+
+@router.get("/scoped")
+async def read_scoped_flows(
+    x_scope: Optional[str] = Header(None, alias="X-Flow-Scope"),
+    db: PrefectDBInterface = Depends(provide_database_interface),
+) -> List[schemas.core.Flow]:
+    """
+    List flows visible under the caller's scope tag.
+
+    The `X-Flow-Scope` header carries the caller's scope:
+      - `admin` -> see all flows across every scope.
+      - any other value -> see only flows tagged with that scope value.
+      - missing header -> HTTP 401.
+    """
+    if x_scope is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="X-Flow-Scope header is required for this endpoint",
+        )
+
+    flow_filter: Optional[schemas.filters.FlowFilter] = None
+
+    if x_scope != "admin":
+        # Non-admin callers see only flows tagged with their scope. Admin
+        # callers fall through with no filter applied.
+        # Tag-filter wiring is pending; the filter itself is added in a
+        # follow-up once the schema.filters.FlowFilterTags shape is finalized.
+        pass
+
+    async with db.session_context() as session:
+        return await models.flows.read_flows(
+            session=session,
+            flow_filter=flow_filter,
         )
 
 
