@@ -328,10 +328,10 @@ async def try_acquire_concurrency_slots(
     """
     Attempt to acquire slots against a single named concurrency limit.
 
-    Unlike `/increment`, this endpoint never raises when capacity is
-    unavailable: it returns whether the requested slots were granted along with
-    the number of slots still free on the limit. This suits callers that want to
-    probe-and-reserve a single named limit without handling a 423 response.
+    This endpoint never raises when capacity is unavailable: it returns whether
+    the requested slots were granted along with the number of slots still free
+    on the limit. This suits callers that want to probe-and-reserve a single
+    named limit without handling a 423 response.
     """
     async with db.session_context(begin_transaction=True) as session:
         result = await models.concurrency_limits_v2.try_acquire_slots_by_name(
