@@ -173,6 +173,16 @@ class WorkerFlowRunResponse(PrefectBaseModel):
     flow_run: schemas.core.FlowRun
 
 
+class FlowRunJobAck(PrefectBaseModel):
+    """Acknowledgement returned when flow-run creation is enqueued for
+    asynchronous processing."""
+
+    job_id: UUID = Field(
+        default=...,
+        description="The id of the enqueued flow-run-creation job.",
+    )
+
+
 class FlowRunResponse(ORMBaseModel):
     name: str = Field(
         default_factory=lambda: generate_slug(2),

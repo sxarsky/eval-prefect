@@ -856,7 +856,7 @@ async def create_flow_run_from_deployment(
     db: PrefectDBInterface = Depends(provide_database_interface),
     worker_lookups: WorkerLookups = Depends(WorkerLookups),
     response: Response = None,
-) -> schemas.responses.FlowRunResponse:
+) -> schemas.responses.FlowRunJobAck:
     """
     Create a flow run from a deployment.
 
@@ -975,15 +975,11 @@ async def create_flow_run_from_deployment(
         if not flow_run.state:
             flow_run.state = schemas.states.Scheduled()
 
-        right_now = now("UTC")
-        model = await models.flow_runs.create_flow_run(
+        job = await models.flow_runs.enqueue_flow_run_creation(
             session=session, flow_run=flow_run
         )
-        if model.created >= right_now:
-            response.status_code = status.HTTP_201_CREATED
-        return schemas.responses.FlowRunResponse.model_validate(
-            model, from_attributes=True
-        )
+        response.status_code = status.HTTP_202_ACCEPTED
+        return schemas.responses.FlowRunJobAck(job_id=job.id)
 
 
 BULK_CREATE_LIMIT = 100
