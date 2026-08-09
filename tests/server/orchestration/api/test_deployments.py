@@ -50,6 +50,7 @@ class TestCreateDeployment:
         storage_document_id,
     ):
         data = DeploymentCreate(
+            work_pool_name="default-agent-pool",
             name="My Deployment",
             version="mint",
             flow_id=flow.id,
@@ -83,6 +84,7 @@ class TestCreateDeployment:
         storage_document_id,
     ):
         data = DeploymentCreate(
+            work_pool_name="default-agent-pool",
             name="My Deployment",
             version="mint",
             path="/",
@@ -127,6 +129,7 @@ class TestCreateDeployment:
         )
 
         data = DeploymentCreate(  # type: ignore
+            work_pool_name="default-agent-pool",
             name="My Deployment",
             version="mint",
             flow_id=flow.id,
@@ -170,6 +173,7 @@ class TestCreateDeployment:
         )
 
         data = DeploymentCreate(  # type: ignore
+            work_pool_name="default-agent-pool",
             name="My Deployment",
             version="mint",
             flow_id=flow.id,
@@ -224,6 +228,7 @@ class TestCreateDeployment:
         )
 
         data = DeploymentCreate(  # type: ignore
+            work_pool_name="default-agent-pool",
             name="My Deployment",
             version="mint",
             flow_id=flow.id,
@@ -279,6 +284,7 @@ class TestCreateDeployment:
 
     async def test_default_work_queue_name_is_none(self, session, client, flow):
         data = DeploymentCreate(name="My Deployment", flow_id=flow.id).model_dump(
+            work_pool_name="default-agent-pool",
             mode="json"
         )
         response = await client.post("/deployments/", json=data)
@@ -293,6 +299,7 @@ class TestCreateDeployment:
         storage_document_id,
     ):
         data = DeploymentCreate(
+            work_pool_name="default-agent-pool",
             name="My Deployment",
             flow_id=flow.id,
             paused=True,
@@ -305,6 +312,7 @@ class TestCreateDeployment:
 
         # post the same data
         data = DeploymentCreate(
+            work_pool_name="default-agent-pool",
             name="My Deployment",
             flow_id=flow.id,
             paused=True,
@@ -319,6 +327,7 @@ class TestCreateDeployment:
 
         # post different data, upsert should be respected
         data = DeploymentCreate(
+            work_pool_name="default-agent-pool",
             name="My Deployment",
             flow_id=flow.id,
             paused=False,  # CHANGED
@@ -338,6 +347,7 @@ class TestCreateDeployment:
         current_time = now_fn("UTC")
 
         data = DeploymentCreate(
+            work_pool_name="default-agent-pool",
             name="My Deployment",
             flow_id=flow.id,
         ).model_dump(mode="json")
@@ -356,6 +366,7 @@ class TestCreateDeployment:
         await client.post(
             "/deployments/",
             json=DeploymentCreate(
+                work_pool_name="default-agent-pool",
                 name="My Deployment",
                 flow_id=flow.id,
                 schedules=[
@@ -386,6 +397,7 @@ class TestCreateDeployment:
         await client.post(
             "/deployments/",
             json=DeploymentCreate(
+                work_pool_name="default-agent-pool",
                 name="My Deployment",
                 flow_id=flow.id,
                 paused=False,
@@ -414,6 +426,7 @@ class TestCreateDeployment:
         response = await client.post(
             "/deployments/",
             json=DeploymentCreate(
+                work_pool_name="default-agent-pool",
                 name="My Deployment1",
                 flow_id=flow.id,
                 global_concurrency_limit_id=concurrency_limit.id,  # Changed from global_concurrency_limit_id
@@ -485,6 +498,7 @@ class TestCreateDeployment:
         await client.post(
             "/deployments/",
             json=schemas.actions.DeploymentCreate(
+                work_pool_name="default-agent-pool",
                 name=deployment.name,
                 flow_id=deployment.flow_id,
                 schedules=[
@@ -530,6 +544,7 @@ class TestCreateDeployment:
         await client.post(
             "/deployments/",
             json=schemas.actions.DeploymentCreate(
+                work_pool_name="default-agent-pool",
                 name=deployment.name,
                 flow_id=deployment.flow_id,
                 schedules=[
@@ -563,6 +578,7 @@ class TestCreateDeployment:
         storage_document_id,
     ):
         data = DeploymentCreate(
+            work_pool_name="default-agent-pool",
             name="My Deployment",
             flow_id=flow.id,
             tags=["foo"],
@@ -1080,6 +1096,7 @@ class TestCreateDeployment:
         assert deployment.paused is False
 
         data = DeploymentCreate(  # type: ignore
+            work_pool_name="default-agent-pool",
             name=deployment.name,
             flow_id=deployment.flow_id,
             paused=True,
@@ -1160,6 +1177,7 @@ class TestCreateDeployment:
     ):
         # Create deployment with a schedule
         data = DeploymentCreate(  # type: ignore
+            work_pool_name="default-agent-pool",
             name="Deployment with schedules",
             flow_id=flow.id,
             schedules=[
@@ -1209,6 +1227,7 @@ class TestCreateDeployment:
     ):
         small_params = {"data": "x" * 100}
         data = DeploymentCreate(
+            work_pool_name="default-agent-pool",
             name="Small Params Deployment",
             flow_id=flow.id,
             parameters=small_params,
@@ -1723,6 +1742,7 @@ class TestUpdateDeployment:
         new_schema = parameter_schema(byebye).model_dump_for_openapi()
 
         data = DeploymentCreate(  # type: ignore
+            work_pool_name="default-agent-pool",
             name="test-patch",
             flow_id=flow.id,
             enforce_parameter_schema=True,
@@ -1782,6 +1802,7 @@ class TestUpdateDeployment:
         schema = parameter_schema(hello).model_dump_for_openapi()
 
         data = DeploymentCreate(  # type: ignore
+            work_pool_name="default-agent-pool",
             name="test-patch-2",
             flow_id=flow.id,
             enforce_parameter_schema=True,
@@ -2075,6 +2096,7 @@ class TestUpdateDeployment:
         )
 
         data = DeploymentCreate(  # type: ignore
+            work_pool_name="default-agent-pool",
             name="My Deployment",
             version="mint",
             flow_id=flow.id,
@@ -2161,6 +2183,7 @@ class TestUpdateDeployment:
         )
 
         data = DeploymentCreate(  # type: ignore
+            work_pool_name="default-agent-pool",
             name="My Deployment",
             version="mint",
             flow_id=flow.id,
@@ -2251,6 +2274,7 @@ class TestUpdateDeployment:
             interval=datetime.timedelta(days=2)
         )
         data = DeploymentCreate(
+            work_pool_name="default-agent-pool",
             name="My Deployment",
             version="mint",
             flow_id=flow.id,
@@ -2305,6 +2329,7 @@ class TestUpdateDeployment:
         )
 
         data = DeploymentCreate(  # type: ignore
+            work_pool_name="default-agent-pool",
             name="My Deployment",
             version="mint",
             flow_id=flow.id,
@@ -2360,6 +2385,7 @@ class TestUpdateDeployment:
         )
 
         data = DeploymentCreate(  # type: ignore
+            work_pool_name="default-agent-pool",
             name="My Deployment",
             version="mint",
             flow_id=flow.id,
@@ -2433,6 +2459,7 @@ class TestUpdateDeployment:
         )
 
         data = DeploymentCreate(
+            work_pool_name="default-agent-pool",
             name="My Deployment",
             version="mint",
             flow_id=flow.id,
@@ -2646,6 +2673,7 @@ class TestUpdateDeployment:
 
         # Create deployment with initial schedule
         data = DeploymentCreate(  # type: ignore
+            work_pool_name="default-agent-pool",
             name="test-deployment-replaces",
             flow_id=flow.id,
             schedules=[
@@ -2700,6 +2728,7 @@ class TestUpdateDeployment:
 
         # Create deployment with initial schedule
         data = DeploymentCreate(  # type: ignore
+            work_pool_name="default-agent-pool",
             name="test-deployment-replaces-nonexistent",
             flow_id=flow.id,
             schedules=[
@@ -2755,6 +2784,7 @@ class TestUpdateDeployment:
 
         # Create deployment with initial schedule
         data = DeploymentCreate(  # type: ignore
+            work_pool_name="default-agent-pool",
             name="test-deployment-replaces-conflict",
             flow_id=flow.id,
             schedules=[
@@ -2814,6 +2844,7 @@ class TestUpdateDeployment:
 
         # Create deployment with two schedules
         data = DeploymentCreate(  # type: ignore
+            work_pool_name="default-agent-pool",
             name="test-deployment-replaces-collision",
             flow_id=flow.id,
             schedules=[
@@ -2865,6 +2896,7 @@ class TestUpdateDeployment:
     ):
         """Chain rename (a->b, b->c) should update both schedules without collisions."""
         data = DeploymentCreate(  # type: ignore
+            work_pool_name="default-agent-pool",
             name="test-deployment-chain-rename",
             flow_id=flow.id,
             schedules=[
@@ -2923,6 +2955,7 @@ class TestUpdateDeployment:
     ):
         """Slug swap (x->y, y->x) should update both schedules without collisions."""
         data = DeploymentCreate(  # type: ignore
+            work_pool_name="default-agent-pool",
             name="test-deployment-slug-swap",
             flow_id=flow.id,
             schedules=[
@@ -4127,6 +4160,7 @@ class TestDeploymentCRUDEvents:
         self, client, flow, flow_function
     ):
         data = DeploymentCreate(
+            work_pool_name="default-agent-pool",
             name="events-test-deployment",
             flow_id=flow.id,
         ).model_dump(mode="json")
@@ -4153,6 +4187,7 @@ class TestDeploymentCRUDEvents:
         self, client, deployment, flow
     ):
         data = DeploymentCreate(
+            work_pool_name="default-agent-pool",
             name=deployment.name,
             flow_id=flow.id,
             description="updated via upsert",
@@ -4252,9 +4287,11 @@ class TestDeploymentCRUDEvents:
     ):
         # Create two deployments
         dep1_data = DeploymentCreate(name="bulk-del-1", flow_id=flow.id).model_dump(
+            work_pool_name="default-agent-pool",
             mode="json"
         )
         dep2_data = DeploymentCreate(name="bulk-del-2", flow_id=flow.id).model_dump(
+            work_pool_name="default-agent-pool",
             mode="json"
         )
         r1 = await client.post("/deployments/", json=dep1_data)
