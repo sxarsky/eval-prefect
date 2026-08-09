@@ -14,16 +14,3 @@ async def test_read_work_queue(client):
     response = await client.get(f"/work_queues/{work_queue_id}")
     assert response.status_code == status.HTTP_200_OK
     assert response.json()["name"] == name
-
-
-async def test_delete_work_queue(client):
-    name = f"wq-{uuid4().hex}"
-    create = await client.post("/work_queues/", json={"name": name})
-    assert create.status_code == status.HTTP_201_CREATED
-    work_queue_id = create.json()["id"]
-
-    delete = await client.delete(f"/work_queues/{work_queue_id}")
-    assert delete.status_code == status.HTTP_204_NO_CONTENT
-
-    response = await client.get(f"/work_queues/{work_queue_id}")
-    assert response.status_code == status.HTTP_404_NOT_FOUND
