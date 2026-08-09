@@ -28,4 +28,8 @@ async def test_work_queue_status_healthy(client, stale_90s_work_queue):
     response = await client.get(f"/work_queues/{stale_90s_work_queue.id}/status")
 
     assert response.status_code == status.HTTP_200_OK
-    assert response.json()["healthy"] is False
+    assert response.json()["healthy"] is True
+    assert response.json()["late_runs_count"] == 0
+    assert response.json()["health_check_policy"]["maximum_late_runs"] == 0
+    assert response.json()["health_check_policy"]["maximum_seconds_since_last_polled"] == 120
+    assert response.json()["last_polled"] is not None
