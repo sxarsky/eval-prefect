@@ -379,6 +379,7 @@ class TestDeploymentValidation:
             params = {
                 "flow_id": flow_id,
                 "name": "test-deployment-2",
+                "work_pool_name": "default-agent-pool",
             }
         else:
             params = {}

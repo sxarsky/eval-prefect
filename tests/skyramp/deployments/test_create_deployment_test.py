@@ -14,7 +14,7 @@ async def test_create_deployment(client):
     deployment_name = f"dep-{uuid4().hex}"
     response = await client.post(
         "/deployments/",
-        json={"name": deployment_name, "flow_id": flow_id},
+        json={"name": deployment_name, "flow_id": flow_id, "work_pool_name": "default-agent-pool"},
     )
 
     assert response.status_code == status.HTTP_201_CREATED
