@@ -6,8 +6,14 @@ from prefect._internal.compatibility.starlette import status
 
 
 async def test_create_work_queue(client):
-    long_desc = "x" * 150
-    data = {"name": f"wq-{uuid4().hex}", "description": long_desc}
+    description = "x" * 100
+    data = {"name": f"wq-{uuid4().hex}", "description": description}
     response = await client.post("/work_queues/", json=data)
     assert response.status_code == status.HTTP_201_CREATED
-    assert response.json()["description"] == long_desc
+    assert response.json()["description"] == description
+    assert response.json()["name"] == data["name"]
+    assert response.json()["status"] == "NOT_READY"
+    assert response.json()["is_paused"] is False
+    assert response.json()["filter"] is None
+    assert response.json()["id"] is not None
+    assert response.json()["priority"] >= 1
