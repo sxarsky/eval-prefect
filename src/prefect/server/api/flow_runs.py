@@ -751,6 +751,103 @@ async def bulk_set_flow_run_state(
     return FlowRunBulkSetStateResponse(results=results)
 
 
+_TARGET_STATE_FACTORIES = {
+    schemas.states.StateType.SCHEDULED: schemas.states.Scheduled,
+    schemas.states.StateType.LATE: schemas.states.Late,
+    schemas.states.StateType.RUNNING: schemas.states.Running,
+    schemas.states.StateType.COMPLETED: schemas.states.Completed,
+    schemas.states.StateType.FAILED: schemas.states.Failed,
+    schemas.states.StateType.CANCELLED: schemas.states.Cancelled,
+}
+
+# Allowed outbound transitions per state. Terminal states (COMPLETED, FAILED,
+# CANCELLED) admit no further transitions.
+_VALID_TRANSITIONS: Dict[schemas.states.StateType, List[schemas.states.StateType]] = {
+    schemas.states.StateType.SCHEDULED: [
+        schemas.states.StateType.LATE,
+        schemas.states.StateType.RUNNING,
+        schemas.states.StateType.CANCELLED,
+    ],
+    schemas.states.StateType.LATE: [
+        schemas.states.StateType.RUNNING,
+        schemas.states.StateType.CANCELLED,
+    ],
+    schemas.states.StateType.RUNNING: [
+        schemas.states.StateType.COMPLETED,
+        schemas.states.StateType.FAILED,
+        schemas.states.StateType.CANCELLED,
+    ],
+    schemas.states.StateType.COMPLETED: [
+        schemas.states.StateType.RUNNING,
+    ],
+    schemas.states.StateType.FAILED: [],
+    schemas.states.StateType.CANCELLED: [],
+}
+
+
+@router.post("/{id:uuid}/transition")
+async def transition_flow_run(
+    flow_run_id: UUID = Path(..., description="The flow run id", alias="id"),
+    target_state: str = Body(..., embed=True, description="Target state name"),
+    db: PrefectDBInterface = Depends(provide_database_interface),
+) -> schemas.responses.FlowRunResponse:
+    """
+    Transition a flow run to a new state, enforcing the valid state graph.
+
+    Returns 200 with the updated flow run on a valid transition, 409 with a
+    message naming the current and requested states on an invalid transition,
+    and 404 when the flow run does not exist.
+    """
+    try:
+        target_type = schemas.states.StateType(target_state)
+    except ValueError:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=f"Unknown target_state: {target_state!r}",
+        )
+
+    factory = _TARGET_STATE_FACTORIES.get(target_type)
+    if factory is None:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=f"Unsupported target_state: {target_state!r}",
+        )
+
+    async with db.session_context(begin_transaction=True) as session:
+        run = await models.flow_runs.read_flow_run(
+            session=session, flow_run_id=flow_run_id
+        )
+        if run is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Flow run not found",
+            )
+
+        current_type = run.state.type if run.state else None
+        allowed = _VALID_TRANSITIONS.get(current_type, [])
+        if target_type not in allowed:
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail=(
+                    f"Invalid transition from {current_type} to {target_type}; "
+                    f"allowed targets: {allowed}"
+                ),
+            )
+
+        await models.flow_runs.set_flow_run_state(
+            session=session,
+            flow_run_id=flow_run_id,
+            state=factory(),
+            force=True,
+        )
+
+        run = await models.flow_runs.read_flow_run(
+            session=session, flow_run_id=flow_run_id
+        )
+
+    return schemas.responses.FlowRunResponse.model_validate(run, from_attributes=True)
+
+
 @router.post("/{id:uuid}/set_state")
 async def set_flow_run_state(
     response: Response,
