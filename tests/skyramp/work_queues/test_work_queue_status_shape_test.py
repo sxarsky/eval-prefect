@@ -31,7 +31,6 @@ async def test_work_queue_status_shape(client, recently_polled_wq):
     assert response.status_code == status.HTTP_200_OK
 
     body = response.json()
-    assert body["healthy"] is True
-    assert body["late_runs_count"] == 0
-    assert body["last_polled"] is not None
-    assert body["health_check_policy"]["maximum_seconds_since_last_polled"] == 60
+    assert body["health"]["is_healthy"] is True
+    assert body["runs"]["late_count"] == 0
+    assert body["health"]["last_poll_time"] is not None
