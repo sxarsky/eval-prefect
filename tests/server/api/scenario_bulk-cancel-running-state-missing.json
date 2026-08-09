@@ -1,0 +1,167 @@
+[
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"name\": \"test-running-state-flow\"}",
+    "ResponseBody": "{\"id\": \"a1b2c3d4-0000-4000-a000-000000000001\", \"name\": \"test-running-state-flow\"}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/flows",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 4200,
+    "Timestamp": "2026-08-09T00:21:57.354Z",
+    "Scheme": "http",
+    "scenarioName": "bulk-cancel-running-state-missing",
+    "UniqueFields": [
+      "name"
+    ]
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"flow_id\": \"a1b2c3d4-0000-4000-a000-000000000001\"}",
+    "ResponseBody": "{\"id\": \"a1b2c3d4-0000-4000-a000-000000000002\", \"flow_id\": \"a1b2c3d4-0000-4000-a000-000000000001\", \"state\": {\"type\": \"PENDING\"}}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/flow_runs",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 4200,
+    "Timestamp": "2026-08-09T00:21:58.354Z",
+    "Scheme": "http",
+    "scenarioName": "bulk-cancel-running-state-missing"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"state\": {\"type\": \"RUNNING\", \"name\": \"Running\"}, \"force\": true}",
+    "ResponseBody": "{\"status\": \"ACCEPT\", \"state\": {\"type\": \"RUNNING\", \"name\": \"Running\"}}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/flow_runs/a1b2c3d4-0000-4000-a000-000000000002/set_state",
+    "QueryParams": {},
+    "StatusCode": 200,
+    "Port": 4200,
+    "Timestamp": "2026-08-09T00:21:59.354Z",
+    "Scheme": "http",
+    "scenarioName": "bulk-cancel-running-state-missing"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"flow_run_ids\": [\"a1b2c3d4-0000-4000-a000-000000000002\"]}",
+    "ResponseBody": "{\"cancelled\": [\"a1b2c3d4-0000-4000-a000-000000000002\"], \"skipped\": [], \"errors\": []}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/flow_runs/bulk_cancel",
+    "QueryParams": {},
+    "StatusCode": 200,
+    "Port": 4200,
+    "Timestamp": "2026-08-09T00:22:00.354Z",
+    "Scheme": "http",
+    "scenarioName": "bulk-cancel-running-state-missing"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "",
+    "ResponseBody": "{}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "DELETE",
+    "Path": "/api/flow_runs/a1b2c3d4-0000-4000-a000-000000000002",
+    "QueryParams": {},
+    "StatusCode": 204,
+    "Port": 4200,
+    "Timestamp": "2026-08-09T00:22:01.354Z",
+    "Scheme": "http",
+    "scenarioName": "bulk-cancel-running-state-missing"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "",
+    "ResponseBody": "{}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "DELETE",
+    "Path": "/api/flows/a1b2c3d4-0000-4000-a000-000000000001",
+    "QueryParams": {},
+    "StatusCode": 204,
+    "Port": 4200,
+    "Timestamp": "2026-08-09T00:22:02.354Z",
+    "Scheme": "http",
+    "scenarioName": "bulk-cancel-running-state-missing"
+  }
+]
