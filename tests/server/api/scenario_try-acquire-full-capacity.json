@@ -1,0 +1,86 @@
+[
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"name\": \"full-capacity-test\", \"limit\": 2}",
+    "ResponseBody": "{\"id\": \"f47ac10b-58cc-4372-a567-0e02b2c3d480\", \"name\": \"full-capacity-test\", \"limit\": 2, \"active\": true, \"active_slots\": 0}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/v2/concurrency_limits",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 4200,
+    "Timestamp": "2026-08-09T22:37:20.286Z",
+    "Scheme": "http",
+    "scenarioName": "try-acquire-full-capacity",
+    "UniqueFields": [
+      "name"
+    ]
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"name\": \"full-capacity-test\", \"slots\": 2}",
+    "ResponseBody": "{\"acquired\": true, \"remaining_slots\": 0}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/v2/concurrency_limits/try-acquire",
+    "QueryParams": {},
+    "StatusCode": 200,
+    "Port": 4200,
+    "Timestamp": "2026-08-09T22:37:21.286Z",
+    "Scheme": "http",
+    "scenarioName": "try-acquire-full-capacity"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "",
+    "ResponseBody": "{}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "DELETE",
+    "Path": "/api/v2/concurrency_limits/f47ac10b-58cc-4372-a567-0e02b2c3d480",
+    "QueryParams": {},
+    "StatusCode": 204,
+    "Port": 4200,
+    "Timestamp": "2026-08-09T22:37:22.286Z",
+    "Scheme": "http",
+    "scenarioName": "try-acquire-full-capacity"
+  }
+]
