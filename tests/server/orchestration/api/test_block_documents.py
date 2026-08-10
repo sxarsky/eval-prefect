@@ -124,6 +124,7 @@ class TestCreateBlockDocument:
 
         assert result.name == "x"
         assert result.data == dict(y=1)
+        assert result.field_summaries == {"y": "1"}
         assert result.block_schema_id == block_schemas[0].id
         assert result.block_schema.checksum == block_schemas[0].checksum
         assert result.is_anonymous is False
@@ -132,6 +133,7 @@ class TestCreateBlockDocument:
         api_block = BlockDocument.model_validate(response.json())
         assert api_block.name == "x"
         assert api_block.data == dict(y=1)
+        assert api_block.field_summaries == {"y": "1"}
         assert api_block.is_anonymous is False
         assert result.block_schema_id == block_schemas[0].id
         assert result.block_schema.checksum == block_schemas[0].checksum
