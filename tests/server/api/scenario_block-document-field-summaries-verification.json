@@ -1,0 +1,143 @@
+[
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"name\": \"FieldSummaryBlock\", \"slug\": \"field-summary-block-skyramp\"}",
+    "ResponseBody": "{\"id\": \"550e8400-e29b-41d4-a716-446655440001\", \"name\": \"FieldSummaryBlock\", \"slug\": \"field-summary-block-skyramp\"}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/block_types/",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 4200,
+    "Timestamp": "2026-08-10T01:52:27.538Z",
+    "Scheme": "http",
+    "scenarioName": "block-document-field-summaries-verification",
+    "UniqueFields": [
+      "slug"
+    ]
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"block_type_id\": \"550e8400-e29b-41d4-a716-446655440001\", \"fields\": {\"type\": \"object\", \"properties\": {\"x\": {\"type\": \"integer\"}, \"label\": {\"type\": \"string\"}}}, \"capabilities\": []}",
+    "ResponseBody": "{\"id\": \"550e8400-e29b-41d4-a716-446655440002\"}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/block_schemas/",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 4200,
+    "Timestamp": "2026-08-10T01:52:28.538Z",
+    "Scheme": "http",
+    "scenarioName": "block-document-field-summaries-verification"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"name\": \"field-summary-test-doc\", \"data\": {\"x\": 42, \"label\": \"test-value\"}, \"block_schema_id\": \"550e8400-e29b-41d4-a716-446655440002\", \"block_type_id\": \"550e8400-e29b-41d4-a716-446655440001\"}",
+    "ResponseBody": "{\"id\": \"550e8400-e29b-41d4-a716-446655440003\", \"field_summaries\": {\"x\": \"42\", \"label\": \"test-value\"}, \"data\": {\"x\": 42, \"label\": \"test-value\"}}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/block_documents/",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 4200,
+    "Timestamp": "2026-08-10T01:52:29.538Z",
+    "Scheme": "http",
+    "scenarioName": "block-document-field-summaries-verification",
+    "UniqueFields": [
+      "name"
+    ]
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "",
+    "ResponseBody": "{\"id\": \"550e8400-e29b-41d4-a716-446655440003\", \"field_summaries\": {\"x\": \"42\", \"label\": \"test-value\"}, \"data\": {\"x\": 42, \"label\": \"test-value\"}}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "GET",
+    "Path": "/api/block_documents/550e8400-e29b-41d4-a716-446655440003",
+    "QueryParams": {},
+    "StatusCode": 200,
+    "Port": 4200,
+    "Timestamp": "2026-08-10T01:52:30.538Z",
+    "Scheme": "http",
+    "scenarioName": "block-document-field-summaries-verification"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "",
+    "ResponseBody": "{}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "DELETE",
+    "Path": "/api/block_documents/550e8400-e29b-41d4-a716-446655440003",
+    "QueryParams": {},
+    "StatusCode": 204,
+    "Port": 4200,
+    "Timestamp": "2026-08-10T01:52:31.538Z",
+    "Scheme": "http",
+    "scenarioName": "block-document-field-summaries-verification"
+  }
+]
