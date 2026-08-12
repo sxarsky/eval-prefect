@@ -415,6 +415,10 @@ class TaskRunResponse(ORMBaseModel):
 
 class DeploymentResponse(ORMBaseModel):
     name: str = Field(default=..., description="The name of the deployment.")
+    slots_in_use: Optional[int] = Field(
+        default=None,
+        description="The number of concurrency slots currently in use by this deployment's flow runs.",
+    )
     version: Optional[str] = Field(
         default=None, description="An optional version for the deployment."
     )
