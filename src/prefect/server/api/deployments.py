@@ -4,7 +4,7 @@ Routes for interacting with Deployment objects.
 
 import datetime
 import logging
-from typing import List, Optional
+from typing import Any, List, Optional
 from uuid import UUID
 
 import jsonschema.exceptions
@@ -488,6 +488,16 @@ async def read_deployment_by_name(
         return schemas.responses.DeploymentResponse.model_validate(
             deployment, from_attributes=True
         )
+
+
+async def _count_active_deployment_runs(session: Any, deployment_id: UUID) -> int:
+    """Count the active flow runs for a deployment."""
+    return await models.flow_runs.count_flow_runs(
+        session=session,
+        flow_run_filter=schemas.filters.FlowRunFilter(
+            deployment_id=schemas.filters.FlowRunFilterDeploymentId(any_=[deployment_id]),
+        ),
+    )
 
 
 @router.get("/{id:uuid}")

@@ -27,11 +27,7 @@ services:
       # for DELETE /api/flows/{id} and DELETE /api/deployments/{id}.
       # Other PRs don't enforce this key (no require_admin_key dependency in their code).
       PREFECT_SERVER_ADMIN_API_KEY: "skyramp-test-token"
-    command: >
-      bash -c "
-        pip install --quiet --no-deps -e . &&
-        prefect server start --host 0.0.0.0 --no-services
-      "
+    command: ["bash", "/app/scripts/eval-start.sh"]
     ports:
       - "4200:4200"
     healthcheck:
