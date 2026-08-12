@@ -415,6 +415,10 @@ class TaskRunResponse(ORMBaseModel):
 
 class DeploymentResponse(ORMBaseModel):
     name: str = Field(default=..., description="The name of the deployment.")
+    avg_run_seconds: Optional[float] = Field(
+        default=None,
+        description="The average run time, in seconds, of this deployment's flow runs.",
+    )
     version: Optional[str] = Field(
         default=None, description="An optional version for the deployment."
     )
