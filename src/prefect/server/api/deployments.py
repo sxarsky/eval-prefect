@@ -516,9 +516,13 @@ async def read_deployment(
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND, detail="Deployment not found"
             )
-        return schemas.responses.DeploymentResponse.model_validate(
+        response = schemas.responses.DeploymentResponse.model_validate(
             deployment, from_attributes=True
         )
+        response.active_run_count = await _count_active_deployment_runs(
+            session, deployment_id
+        )
+        return response
 
 
 @router.post("/filter")
