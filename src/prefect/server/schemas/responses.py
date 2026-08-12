@@ -415,6 +415,10 @@ class TaskRunResponse(ORMBaseModel):
 
 class DeploymentResponse(ORMBaseModel):
     name: str = Field(default=..., description="The name of the deployment.")
+    active_run_count: Optional[int] = Field(
+        default=None,
+        description="The number of active (non-terminal) flow runs for this deployment.",
+    )
     version: Optional[str] = Field(
         default=None, description="An optional version for the deployment."
     )
