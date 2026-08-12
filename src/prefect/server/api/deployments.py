@@ -4,7 +4,7 @@ Routes for interacting with Deployment objects.
 
 import datetime
 import logging
-from typing import List, Optional
+from typing import Any, List, Optional
 from uuid import UUID
 
 import jsonschema.exceptions
@@ -488,6 +488,20 @@ async def read_deployment_by_name(
         return schemas.responses.DeploymentResponse.model_validate(
             deployment, from_attributes=True
         )
+
+
+async def _read_avg_run_seconds(session: Any, deployment_id: UUID) -> Optional[float]:
+    """Average run time (seconds) across a deployment's flow runs."""
+    runs = await models.flow_runs.read_flow_runs(
+        session=session,
+        flow_run_filter=schemas.filters.FlowRunFilter(
+            deployment_id=schemas.filters.FlowRunFilterDeploymentId(any_=[deployment_id]),
+        ),
+    )
+    if not runs:
+        return None
+    total_seconds = sum(run.total_run_time.total_seconds() for run in runs)
+    return total_seconds / len(runs)
 
 
 @router.get("/{id:uuid}")
