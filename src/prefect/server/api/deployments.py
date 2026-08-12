@@ -490,8 +490,8 @@ async def read_deployment_by_name(
         )
 
 
-async def _count_active_deployment_runs(session: Any, deployment_id: UUID) -> int:
-    """Count the active flow runs for a deployment."""
+async def _count_deployment_slots_in_use(session: Any, deployment_id: UUID) -> int:
+    """Count the concurrency slots in use by a deployment's flow runs."""
     return await models.flow_runs.count_flow_runs(
         session=session,
         flow_run_filter=schemas.filters.FlowRunFilter(
