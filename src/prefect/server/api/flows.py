@@ -166,7 +166,7 @@ async def flow_run_summary(
         failed=failed,
         running=running,
         total=completed + failed + running,
-        success_rate=completed / finished,
+        success_rate=completed / finished if finished else 0.0,
     )
 
 
