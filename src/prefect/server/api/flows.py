@@ -15,7 +15,9 @@ from prefect.server.database import PrefectDBInterface, provide_database_interfa
 from prefect.server.schemas.responses import (
     FlowBulkDeleteResponse,
     FlowPaginationResponse,
+    FlowRunSummary,
 )
+from prefect.server.schemas.states import StateType
 from prefect.server.utilities.server import PrefectRouter
 from prefect.types._datetime import now
 
@@ -120,6 +122,52 @@ async def read_flow(
             status_code=status.HTTP_404_NOT_FOUND, detail="Flow not found"
         )
     return flow
+
+
+@router.get("/{id:uuid}/run_summary")
+async def flow_run_summary(
+    flow_id: UUID = Path(..., description="The flow id", alias="id"),
+    db: PrefectDBInterface = Depends(provide_database_interface),
+) -> FlowRunSummary:
+    """
+    Return an at-a-glance rollup of a flow's run outcomes.
+
+    Counts the flow's runs by outcome and reports a success rate over the
+    runs that have finished executing.
+    """
+    async with db.session_context() as session:
+        flow = await models.flows.read_flow(session=session, flow_id=flow_id)
+        if not flow:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="Flow not found"
+            )
+        runs = await models.flow_runs.read_flow_runs(
+            session=session,
+            flow_filter=schemas.filters.FlowFilter(
+                id=schemas.filters.FlowFilterId(any_=[flow_id])
+            ),
+        )
+
+    completed = 0
+    failed = 0
+    running = 0
+    for run in runs:
+        state = run.state_type
+        if state in (StateType.COMPLETED, StateType.RUNNING):
+            completed += 1
+        elif state in (StateType.FAILED, StateType.CANCELLED):
+            failed += 1
+        elif state in (StateType.PENDING, StateType.SCHEDULED):
+            running += 1
+
+    finished = completed + failed
+    return FlowRunSummary(
+        completed=completed,
+        failed=failed,
+        running=running,
+        total=completed + failed + running,
+        success_rate=completed / finished,
+    )
 
 
 @router.post("/filter")

@@ -804,3 +804,16 @@ class WorkQueueConcurrencyStatus(PrefectBaseModel):
     limit: int = Field(description="Page size.")
     pages: int = Field(description="Total number of pages.")
     page: int = Field(description="Current page number (1-indexed).")
+
+
+class FlowRunSummary(PrefectBaseModel):
+    """At-a-glance rollup of a flow's run outcomes."""
+
+    completed: int = Field(default=0, description="Number of completed runs.")
+    failed: int = Field(default=0, description="Number of failed runs.")
+    running: int = Field(default=0, description="Number of in-progress runs.")
+    total: int = Field(default=0, description="Total number of runs counted.")
+    success_rate: float = Field(
+        default=0.0,
+        description="Fraction of finished runs that completed successfully.",
+    )
