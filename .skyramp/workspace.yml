@@ -1,0 +1,43 @@
+# Skyramp Workspace Configuration for Prefect eval.
+# Copied into the cloned repo by eval-testbot.sh before the agent runs.
+# Prefect API is unauthenticated by default. pr-e adds X-Admin-Key requirement
+# for DELETE /api/flows/{id} and DELETE /api/deployments/{id}.
+#
+# authType: apiKey + authHeader: X-Admin-Key tells the agent that X-Admin-Key
+# auth is required, so it generates tests with X-Admin-Key headers.
+# The Skyramp CLI v1.3.19 has a bug mapping apiKey → Authorization instead of
+# X-Admin-Key, but test execution still scores well since the agent correctly
+# identifies the auth contract. The MCP's authEnvFileToken fallback injects
+# SKYRAMP_TEST_TOKEN from .skyramp-auth-env.sh into the Docker container so
+# SKYRAMP_PLACEHOLDER_TOKEN replacement works if the CLI is fixed in future.
+workspace:
+  repoName: roshinimichael/prefect-testb
+  repoUrl: git@github.com:roshinimichael/prefect-testb.git
+metadata:
+  schemaVersion: v1
+  mcpVersion: 1.0.0
+  executorVersion: v1.0.0
+  createdAt: "2026-01-01T00:00:00Z"
+  updatedAt: "2026-01-01T00:00:00Z"
+services:
+  - serviceName: prefect-server
+    language: python
+    framework: pytest
+    testDirectory: tests/server/api
+    api:
+      authType: apiKey
+      authHeader: X-Admin-Key
+      baseUrl: http://localhost:4200/api
+    runtimeDetails:
+      runtime: local
+  - serviceName: prefect-ui
+    language: javascript
+    framework: playwright
+    testDirectory: ui-v2/e2e
+    api:
+      baseUrl: http://localhost:5173
+      authType: none
+      authHeader: ""
+    runtimeDetails:
+      runtime: docker
+      dockerNetwork: eval-13-prefect_default
