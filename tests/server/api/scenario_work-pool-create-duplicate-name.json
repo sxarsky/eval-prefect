@@ -1,0 +1,83 @@
+[
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"name\": \"skyramp-dup-pool\", \"type\": \"prefect-agent\"}",
+    "ResponseBody": "{\"id\": \"00000000-0000-0000-0000-000000000002\", \"name\": \"skyramp-dup-pool\"}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/work_pools",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 4200,
+    "Timestamp": "2026-08-20T09:07:05.345Z",
+    "Scheme": "http",
+    "scenarioName": "work-pool-create-duplicate-name"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"name\": \"skyramp-dup-pool\", \"type\": \"prefect-agent\"}",
+    "ResponseBody": "{}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/work_pools",
+    "QueryParams": {},
+    "StatusCode": 409,
+    "Port": 4200,
+    "Timestamp": "2026-08-20T09:07:06.345Z",
+    "Scheme": "http",
+    "scenarioName": "work-pool-create-duplicate-name"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "",
+    "ResponseBody": "{}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "DELETE",
+    "Path": "/api/work_pools/00000000-0000-0000-0000-000000000002",
+    "QueryParams": {},
+    "StatusCode": 204,
+    "Port": 4200,
+    "Timestamp": "2026-08-20T09:07:07.345Z",
+    "Scheme": "http",
+    "scenarioName": "work-pool-create-duplicate-name"
+  }
+]
