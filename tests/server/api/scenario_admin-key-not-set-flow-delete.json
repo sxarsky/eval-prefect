@@ -1,0 +1,59 @@
+[
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"name\": \"test-flow-noop-delete\"}",
+    "ResponseBody": "{\"id\": \"b2c3d4e5-f6a7-8901-bcde-f12345678901\", \"name\": \"test-flow-noop-delete\", \"tags\": [], \"labels\": {}}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/flows",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 4200,
+    "Timestamp": "2026-08-20T09:08:19.292Z",
+    "Scheme": "http",
+    "scenarioName": "admin-key-not-set-flow-delete",
+    "UniqueFields": [
+      "name"
+    ]
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "",
+    "ResponseBody": "{}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "DELETE",
+    "Path": "/api/flows/b2c3d4e5-f6a7-8901-bcde-f12345678901",
+    "QueryParams": {},
+    "StatusCode": 204,
+    "Port": 4200,
+    "Timestamp": "2026-08-20T09:08:20.292Z",
+    "Scheme": "http",
+    "scenarioName": "admin-key-not-set-flow-delete"
+  }
+]
