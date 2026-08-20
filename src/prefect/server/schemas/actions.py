@@ -64,6 +64,11 @@ class FlowCreate(ActionBaseModel):
     name: Name = Field(
         default=..., description="The name of the flow", examples=["my-flow"]
     )
+    description: Optional[str] = Field(
+        default=None,
+        description="A human-readable description of the flow.",
+        examples=["Daily ETL pipeline for the analytics warehouse"],
+    )
     tags: List[str] = Field(
         default_factory=list,
         description="A list of flow tags",
