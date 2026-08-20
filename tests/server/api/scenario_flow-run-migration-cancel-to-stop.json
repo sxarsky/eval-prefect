@@ -1,0 +1,113 @@
+[
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"name\": \"test-flow-migration\"}",
+    "ResponseBody": "{\"id\": \"b8c9d0e1-f2a3-b4c5-d6e7-f8a9b0c1d2e3\"}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/flows",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 4200,
+    "Timestamp": "2026-08-20T09:07:01.674Z",
+    "Scheme": "http",
+    "scenarioName": "flow-run-migration-cancel-to-stop",
+    "UniqueFields": [
+      "name"
+    ]
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"flow_id\": \"b8c9d0e1-f2a3-b4c5-d6e7-f8a9b0c1d2e3\"}",
+    "ResponseBody": "{\"id\": \"c9d0e1f2-a3b4-c5d6-e7f8-a9b0c1d2e3f4\"}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/flow_runs",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 4200,
+    "Timestamp": "2026-08-20T09:07:02.674Z",
+    "Scheme": "http",
+    "scenarioName": "flow-run-migration-cancel-to-stop"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{}",
+    "ResponseBody": "{\"detail\": \"Use POST /api/flow_runs/{id}/stop\"}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/flow_runs/c9d0e1f2-a3b4-c5d6-e7f8-a9b0c1d2e3f4/cancel",
+    "QueryParams": {},
+    "StatusCode": 410,
+    "Port": 4200,
+    "Timestamp": "2026-08-20T09:07:03.674Z",
+    "Scheme": "http",
+    "scenarioName": "flow-run-migration-cancel-to-stop"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{}",
+    "ResponseBody": "{\"id\": \"c9d0e1f2-a3b4-c5d6-e7f8-a9b0c1d2e3f4\", \"state_type\": \"CANCELLED\"}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/flow_runs/c9d0e1f2-a3b4-c5d6-e7f8-a9b0c1d2e3f4/stop",
+    "QueryParams": {},
+    "StatusCode": 200,
+    "Port": 4200,
+    "Timestamp": "2026-08-20T09:07:04.674Z",
+    "Scheme": "http",
+    "scenarioName": "flow-run-migration-cancel-to-stop"
+  }
+]
