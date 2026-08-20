@@ -556,6 +556,26 @@ class WorkPoolResponse(schemas.core.WorkPool):
     )
 
 
+class WorkQueueStats(PrefectBaseModel):
+    """Aggregate flow-run counts for a work queue.
+
+    Surfaced both as the body of ``GET /api/work_queues/{id}/stats`` and
+    as the nested ``stats`` block on ``GET /api/work_queues/{id}``. The
+    two surfaces read from the same aggregation helper so every field
+    agrees.
+    """
+
+    running: int = Field(
+        default=0, description="Count of currently RUNNING flow runs."
+    )
+    pending: int = Field(
+        default=0, description="Count of currently PENDING flow runs."
+    )
+    scheduled_count: int = Field(
+        default=0, description="Count of currently SCHEDULED flow runs."
+    )
+
+
 class WorkQueueResponse(schemas.core.WorkQueue):
     work_pool_name: Optional[str] = Field(
         default=None,
@@ -569,6 +589,14 @@ class WorkQueueResponse(schemas.core.WorkQueue):
         description=(
             "The number of concurrency slots currently in use. "
             "None when concurrency_limit is not set."
+        ),
+    )
+    stats: Optional[WorkQueueStats] = Field(
+        default=None,
+        description=(
+            "Aggregate flow-run counts for this queue. Populated on single-"
+            "queue detail reads (GET /api/work_queues/{id}); omitted on list "
+            "responses where computing per-queue counts would require a fan-out."
         ),
     )
 
