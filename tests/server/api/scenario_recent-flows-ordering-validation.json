@@ -1,0 +1,128 @@
+[
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"name\": \"flow-a-older\"}",
+    "ResponseBody": "{\"id\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\", \"name\": \"flow-a-older\", \"created\": \"2024-01-01T00:00:00.000000Z\", \"updated\": \"2024-01-01T00:00:00.000000Z\", \"tags\": [], \"labels\": {}}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/flows",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 4200,
+    "Timestamp": "2026-08-20T09:07:01.154Z",
+    "Scheme": "http",
+    "scenarioName": "recent-flows-ordering-validation",
+    "UniqueFields": [
+      "name"
+    ]
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"name\": \"flow-b-newer\"}",
+    "ResponseBody": "{\"id\": \"7c2d4e6f-1234-5678-abcd-ef0123456789\", \"name\": \"flow-b-newer\", \"created\": \"2024-01-01T00:01:00.000000Z\", \"updated\": \"2024-01-01T00:01:00.000000Z\", \"tags\": [], \"labels\": {}}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/flows",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 4200,
+    "Timestamp": "2026-08-20T09:07:02.154Z",
+    "Scheme": "http",
+    "scenarioName": "recent-flows-ordering-validation",
+    "UniqueFields": [
+      "name"
+    ]
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "",
+    "ResponseBody": "{\"items\": [{\"id\": \"7c2d4e6f-1234-5678-abcd-ef0123456789\", \"name\": \"flow-b-newer\", \"created\": \"2024-01-01T00:01:00.000000Z\"}, {\"id\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\", \"name\": \"flow-a-older\", \"created\": \"2024-01-01T00:00:00.000000Z\"}]}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "GET",
+    "Path": "/api/flows/recent",
+    "QueryParams": {},
+    "StatusCode": 200,
+    "Port": 4200,
+    "Timestamp": "2026-08-20T09:07:03.154Z",
+    "Scheme": "http",
+    "scenarioName": "recent-flows-ordering-validation"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "",
+    "ResponseBody": "{}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "DELETE",
+    "Path": "/api/flows/3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "QueryParams": {},
+    "StatusCode": 204,
+    "Port": 4200,
+    "Timestamp": "2026-08-20T09:07:04.154Z",
+    "Scheme": "http",
+    "scenarioName": "recent-flows-ordering-validation"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "",
+    "ResponseBody": "{}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "DELETE",
+    "Path": "/api/flows/7c2d4e6f-1234-5678-abcd-ef0123456789",
+    "QueryParams": {},
+    "StatusCode": 204,
+    "Port": 4200,
+    "Timestamp": "2026-08-20T09:07:05.154Z",
+    "Scheme": "http",
+    "scenarioName": "recent-flows-ordering-validation"
+  }
+]
