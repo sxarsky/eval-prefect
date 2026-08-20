@@ -852,6 +852,14 @@ async def pause_deployment(
 async def create_flow_run_from_deployment(
     flow_run: schemas.actions.DeploymentFlowRunCreate,
     deployment_id: UUID = Path(..., description="The deployment id", alias="id"),
+    max_active_runs: Optional[int] = Body(
+        None,
+        ge=1,
+        description=(
+            "If provided, reject the request with 429 when the deployment already "
+            "has this many active flow runs (not yet completed)."
+        ),
+    ),
     created_by: Optional[schemas.core.CreatedBy] = Depends(dependencies.get_created_by),
     db: PrefectDBInterface = Depends(provide_database_interface),
     worker_lookups: WorkerLookups = Depends(WorkerLookups),
@@ -864,6 +872,9 @@ async def create_flow_run_from_deployment(
     If tags are not provided, the deployment's tags will be used.
 
     If no state is provided, the flow run will be created in a SCHEDULED state.
+
+    If ``max_active_runs`` is provided, the request is rejected with 429 when the
+    deployment already has that many flow runs waiting to be executed.
     """
     async with db.session_context(begin_transaction=True) as session:
         # get relevant info from the deployment
@@ -875,6 +886,32 @@ async def create_flow_run_from_deployment(
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND, detail="Deployment not found"
             )
+
+        if max_active_runs is not None:
+            active_count = await models.flow_runs.count_flow_runs(
+                session=session,
+                flow_run_filter=schemas.filters.FlowRunFilter(
+                    state=schemas.filters.FlowRunFilterState(
+                        type=schemas.filters.FlowRunFilterStateType(
+                            any_=[
+                                schemas.states.StateType.SCHEDULED,
+                                schemas.states.StateType.PENDING,
+                            ]
+                        )
+                    )
+                ),
+                deployment_filter=schemas.filters.DeploymentFilter(
+                    id=schemas.filters.DeploymentFilterId(any_=[deployment_id])
+                ),
+            )
+            if active_count >= max_active_runs:
+                raise HTTPException(
+                    status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+                    detail=(
+                        f"Deployment {deployment_id} already has {active_count} "
+                        f"active flow runs (limit: {max_active_runs})."
+                    ),
+                )
 
         try:
             dehydrated_params = deployment.parameters
