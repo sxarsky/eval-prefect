@@ -15,12 +15,25 @@ class TestCreateFlow:
         response = await client.post("/flows/", json=flow_data)
         assert response.status_code == status.HTTP_201_CREATED
         assert response.json()["name"] == "my-flow"
+        assert response.json()["description"] is None
         flow_id = response.json()["id"]
 
         flow = await models.flows.read_flow(session=session, flow_id=flow_id)
         assert flow
         assert str(flow.id) == flow_id
         assert flow.labels == {"env": "dev"}
+
+    async def test_create_flow_with_description(self, client):
+        flow_data = {"name": "my-described-flow", "description": "My test flow description"}
+        response = await client.post("/flows/", json=flow_data)
+        assert response.status_code == status.HTTP_201_CREATED
+        assert response.json()["name"] == "my-described-flow"
+        assert response.json()["description"] == "My test flow description"
+        flow_id = response.json()["id"]
+
+        response = await client.get(f"/flows/{flow_id}")
+        assert response.status_code == status.HTTP_200_OK
+        assert response.json()["description"] == "My test flow description"
 
     async def test_create_flow_populates_and_returned_created(self, client):
         current_time = now("UTC")
