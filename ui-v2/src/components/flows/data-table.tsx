@@ -13,6 +13,7 @@ import { useCallback, useState } from "react";
 import { type Flow, useDeleteFlowById } from "@/api/flows";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table";
+import { DeleteConfirmationDialog } from "@/components/ui/delete-confirmation-dialog";
 import { Icon } from "@/components/ui/icons";
 import { SearchInput } from "@/components/ui/input";
 import {
@@ -59,6 +60,7 @@ export default function FlowsTable({
 }) {
 	const { deleteFlow } = useDeleteFlowById();
 	const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
+	const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
 	const nameSearchValue = (columnFilters.find((filter) => filter.id === "name")
 		?.value ?? "") as string;
@@ -110,15 +112,27 @@ export default function FlowsTable({
 		onPaginationChange: handlePaginationChange,
 	});
 
-	const handleDeleteRows = () => {
-		const selectedRows = Object.keys(rowSelection);
+	// Open the confirm dialog. Deletion is deferred until the user confirms.
+	const handleOpenDeleteDialog = () => {
+		setDeleteDialogOpen(true);
+	};
 
+	const handleCancelDelete = () => {
+		setDeleteDialogOpen(false);
+		// Reset selection so users don't accidentally re-attempt the same delete
+		// on their next click.
+		table.toggleAllRowsSelected(false);
+	};
+
+	const handleConfirmDelete = () => {
+		const selectedRows = Object.keys(rowSelection);
 		const idsToDelete = selectedRows.map((rowId) => flows[Number(rowId)].id);
 
 		for (const id of idsToDelete) {
 			deleteFlow(id);
 		}
 
+		setDeleteDialogOpen(false);
 		table.toggleAllRowsSelected(false);
 	};
 
@@ -133,7 +147,7 @@ export default function FlowsTable({
 								variant="ghost"
 								size="icon"
 								className="ml-2 size-6"
-								onClick={handleDeleteRows}
+								onClick={handleOpenDeleteDialog}
 								aria-label="Delete selected flows"
 							>
 								<Icon id="Trash2" className="size-4" />
@@ -175,6 +189,13 @@ export default function FlowsTable({
 				</div>
 			</div>
 			<DataTable table={table} onPrefetchPage={onPrefetchPage} />
+			<DeleteConfirmationDialog
+				isOpen={deleteDialogOpen}
+				title={`Delete ${count} ${pluralize(count, "flow")}?`}
+				description="This will permanently delete the selected flows and their associated deployments. This action cannot be undone."
+				onConfirm={handleConfirmDelete}
+				onClose={handleCancelDelete}
+			/>
 		</div>
 	);
 }
