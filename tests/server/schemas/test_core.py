@@ -381,3 +381,53 @@ class TestConcurrencyOptions:
             collision_strategy=schemas.core.ConcurrencyLimitStrategy.ENQUEUE
         )
         assert options.grace_period_seconds is None
+
+
+class TestDeploymentDefaultParameters:
+    def test_valid_identifier_keys_accepted(self):
+        deployment = schemas.core.Deployment(
+            name="test-deployment",
+            flow_id=uuid4(),
+            default_parameters={"timeout": 30, "retry_limit": 3},
+        )
+        assert deployment.default_parameters == {"timeout": 30, "retry_limit": 3}
+
+    def test_none_default_parameters_accepted(self):
+        deployment = schemas.core.Deployment(
+            name="test-deployment",
+            flow_id=uuid4(),
+            default_parameters=None,
+        )
+        assert deployment.default_parameters is None
+
+    def test_empty_dict_default_parameters_accepted(self):
+        deployment = schemas.core.Deployment(
+            name="test-deployment",
+            flow_id=uuid4(),
+            default_parameters={},
+        )
+        assert deployment.default_parameters == {}
+
+    def test_invalid_key_starting_with_digit_raises(self):
+        with pytest.raises(ValidationError, match="not a valid Python identifier"):
+            schemas.core.Deployment(
+                name="test-deployment",
+                flow_id=uuid4(),
+                default_parameters={"1invalid": "val"},
+            )
+
+    def test_key_with_space_raises(self):
+        with pytest.raises(ValidationError, match="not a valid Python identifier"):
+            schemas.core.Deployment(
+                name="test-deployment",
+                flow_id=uuid4(),
+                default_parameters={"my key": "val"},
+            )
+
+    def test_key_with_hyphen_raises(self):
+        with pytest.raises(ValidationError, match="not a valid Python identifier"):
+            schemas.core.Deployment(
+                name="test-deployment",
+                flow_id=uuid4(),
+                default_parameters={"my-key": "val"},
+            )

@@ -189,6 +189,26 @@ class TestDeploymentCreate:
         assert deployment.concurrency_limit is None
         assert deployment.global_concurrency_limit_id is None
 
+    def test_create_with_valid_default_parameters(self):
+        deployment = DeploymentCreate(
+            name="test-deployment",
+            flow_id=uuid4(),
+            default_parameters={"timeout": 30, "retry_limit": 3},
+        )
+        assert deployment.default_parameters == {"timeout": 30, "retry_limit": 3}
+
+    def test_create_with_none_default_parameters(self):
+        deployment = DeploymentCreate(name="test-deployment", flow_id=uuid4())
+        assert deployment.default_parameters is None
+
+    def test_create_with_empty_dict_default_parameters(self):
+        deployment = DeploymentCreate(
+            name="test-deployment",
+            flow_id=uuid4(),
+            default_parameters={},
+        )
+        assert deployment.default_parameters == {}
+
 
 class TestDeploymentUpdate:
     def test_update_with_worker_pool_queue_id_warns(self):
@@ -229,6 +249,20 @@ class TestDeploymentUpdate:
 
         for key in kwargs.keys():
             assert getattr(deployment_update, key, 0) == 0
+
+    def test_update_with_valid_default_parameters(self):
+        deployment_update = DeploymentUpdate(
+            default_parameters={"timeout": 60, "env": "prod"},
+        )
+        assert deployment_update.default_parameters == {"timeout": 60, "env": "prod"}
+
+    def test_update_with_none_default_parameters(self):
+        deployment_update = DeploymentUpdate()
+        assert deployment_update.default_parameters is None
+
+    def test_update_with_empty_dict_default_parameters(self):
+        deployment_update = DeploymentUpdate(default_parameters={})
+        assert deployment_update.default_parameters == {}
 
     def test_check_valid_configuration_ignores_required_fields(self):
         """
