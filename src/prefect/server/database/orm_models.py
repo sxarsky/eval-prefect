@@ -139,6 +139,7 @@ class Flow(Base):
     """SQLAlchemy mixin of a flow."""
 
     name: Mapped[str]
+    version: Mapped[Optional[str]] = mapped_column(sa.String(50), nullable=True)
     tags: Mapped[list[str]] = mapped_column(JSON, server_default="[]", default=list)
     labels: Mapped[Optional[schemas.core.KeyValueLabels]] = mapped_column(JSON)
 
