@@ -1,0 +1,29 @@
+name: Deploy Staging
+
+on:
+  push:
+    branches: [staging]
+  workflow_dispatch: {}
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build staging image
+        run: |
+          docker build \
+            -f deployment-staging/Dockerfile \
+            -t prefect-staging:${{ github.sha }} \
+            .
+
+      - name: Smoke check image
+        run: docker run --rm --entrypoint prefect prefect-staging:${{ github.sha }} version
+
+      - name: Push to staging registry
+        if: github.event_name == 'push'
+        run: |
+          echo "${{ secrets.STAGING_REGISTRY_TOKEN }}" | docker login registry.staging.internal -u deploy --password-stdin
+          docker tag prefect-staging:${{ github.sha }} registry.staging.internal/prefect-staging:${{ github.sha }}
+          docker push registry.staging.internal/prefect-staging:${{ github.sha }}
