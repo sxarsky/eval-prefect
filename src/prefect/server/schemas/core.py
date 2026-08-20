@@ -86,6 +86,13 @@ class Flow(ORMBaseModel):
     name: Name = Field(
         default=..., description="The name of the flow", examples=["my-flow"]
     )
+    version: Optional[str] = Field(
+        default=None,
+        description="A version identifier for this flow.",
+        examples=["1.2.3"],
+        max_length=50,
+        pattern=r"^[A-Za-z0-9._+-]{1,50}$",
+    )
     tags: List[str] = Field(
         default_factory=list,
         description="A list of flow tags",
