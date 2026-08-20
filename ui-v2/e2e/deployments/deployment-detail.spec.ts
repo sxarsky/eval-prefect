@@ -2,9 +2,11 @@ import {
 	cleanupDeployments,
 	cleanupFlowRuns,
 	cleanupFlows,
+	cleanupWorkPools,
 	createDeployment,
 	createFlow,
 	createFlowRun,
+	createWorkPool,
 	expect,
 	listDeployments,
 	listFlowRuns,
@@ -13,12 +15,22 @@ import {
 } from "../fixtures";
 
 const TEST_PREFIX = "e2e-dep-detail-";
+const WORK_POOL_NAME = `${TEST_PREFIX}pool`;
 
 test.describe("Deployment Detail Page", () => {
 	test.describe.configure({ mode: "serial" });
 
 	test.beforeAll(async ({ apiClient }) => {
 		await waitForServerHealth(apiClient);
+		await createWorkPool(apiClient, { name: WORK_POOL_NAME, type: "process" });
+	});
+
+	test.afterAll(async ({ apiClient }) => {
+		try {
+			await cleanupWorkPools(apiClient, TEST_PREFIX);
+		} catch {
+			// Ignore cleanup errors
+		}
 	});
 
 	test.beforeEach(async ({ apiClient }) => {
@@ -53,6 +65,7 @@ test.describe("Deployment Detail Page", () => {
 			name: depName,
 			flowId: flow.id,
 			tags: ["e2e-detail-tag"],
+			workPoolName: WORK_POOL_NAME,
 		});
 
 		await page.goto(`/deployments/deployment/${deployment.id}`);
@@ -81,6 +94,7 @@ test.describe("Deployment Detail Page", () => {
 		const deployment = await createDeployment(apiClient, {
 			name: depName,
 			flowId: flow.id,
+			workPoolName: WORK_POOL_NAME,
 		});
 		await createFlowRun(apiClient, {
 			flowId: flow.id,
@@ -104,6 +118,7 @@ test.describe("Deployment Detail Page", () => {
 		const deployment = await createDeployment(apiClient, {
 			name: depName,
 			flowId: flow.id,
+			workPoolName: WORK_POOL_NAME,
 		});
 
 		await page.goto(`/deployments/deployment/${deployment.id}`);
@@ -143,6 +158,7 @@ test.describe("Deployment Detail Page", () => {
 			name: depName,
 			flowId: flow.id,
 			tags: ["e2e-edit-tag"],
+			workPoolName: WORK_POOL_NAME,
 		});
 
 		await page.goto(`/deployments/deployment/${deployment.id}/edit`);
@@ -174,6 +190,7 @@ test.describe("Deployment Detail Page", () => {
 		const deployment = await createDeployment(apiClient, {
 			name: depName,
 			flowId: flow.id,
+			workPoolName: WORK_POOL_NAME,
 		});
 
 		await page.goto(`/deployments/deployment/${deployment.id}/duplicate`);
@@ -208,6 +225,7 @@ test.describe("Deployment Detail Page", () => {
 		const deployment = await createDeployment(apiClient, {
 			name: depName,
 			flowId: flow.id,
+			workPoolName: WORK_POOL_NAME,
 		});
 
 		await page.goto(`/deployments/deployment/${deployment.id}`);
@@ -249,6 +267,7 @@ test.describe("Deployment Detail Page", () => {
 			name: depName,
 			flowId: flow.id,
 			schedules: [{ active: true, schedule: { interval: 300 } }],
+			workPoolName: WORK_POOL_NAME,
 		});
 
 		await page.goto(`/deployments/deployment/${deployment.id}`);

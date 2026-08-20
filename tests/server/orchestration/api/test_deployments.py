@@ -49,30 +49,17 @@ class TestCreateDeployment:
         flow_function,
         storage_document_id,
     ):
-        data = DeploymentCreate(
-            name="My Deployment",
-            version="mint",
-            flow_id=flow.id,
-            tags=["foo"],
-            parameters={"foo": "bar"},
-            storage_document_id=storage_document_id,
-        ).model_dump(mode="json")
+        # work_pool_name is now required (str = Field(default=...)); omitting it returns 422
+        data = {
+            "name": "My Deployment",
+            "version": "mint",
+            "flow_id": str(flow.id),
+            "tags": ["foo"],
+            "parameters": {"foo": "bar"},
+            "storage_document_id": str(storage_document_id),
+        }
         response = await hosted_api_client.post("/deployments/", json=data)
-        assert response.status_code == status.HTTP_201_CREATED
-        assert response.json()["name"] == "My Deployment"
-        assert response.json()["version"] == "mint"
-        assert response.json()["storage_document_id"] == str(storage_document_id)
-        deployment_id = response.json()["id"]
-
-        deployment = await models.deployments.read_deployment(
-            session=session, deployment_id=deployment_id
-        )
-        assert str(deployment.id) == deployment_id
-        assert deployment.name == "My Deployment"
-        assert deployment.tags == ["foo"]
-        assert deployment.flow_id == flow.id
-        assert deployment.parameters == {"foo": "bar"}
-        assert deployment.storage_document_id == storage_document_id
+        assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
 
     async def test_create_deployment(
         self,

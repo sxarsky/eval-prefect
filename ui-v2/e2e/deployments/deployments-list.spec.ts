@@ -2,14 +2,17 @@ import type { Page } from "@playwright/test";
 import {
 	cleanupDeployments,
 	cleanupFlows,
+	cleanupWorkPools,
 	createDeployment,
 	createFlow,
+	createWorkPool,
 	expect,
 	test,
 	waitForServerHealth,
 } from "../fixtures";
 
 const TEST_PREFIX = "e2e-dep-list-";
+const WORK_POOL_NAME = `${TEST_PREFIX}pool`;
 
 async function waitForDeploymentsPageReady(page: Page): Promise<void> {
 	await expect(
@@ -24,6 +27,7 @@ test.describe("Deployments List Page", () => {
 
 	test.beforeAll(async ({ apiClient }) => {
 		await waitForServerHealth(apiClient);
+		await createWorkPool(apiClient, { name: WORK_POOL_NAME, type: "process" });
 	});
 
 	test.beforeEach(async ({ apiClient }) => {
@@ -39,6 +43,14 @@ test.describe("Deployments List Page", () => {
 		try {
 			await cleanupDeployments(apiClient, TEST_PREFIX);
 			await cleanupFlows(apiClient, TEST_PREFIX);
+		} catch {
+			// Ignore cleanup errors
+		}
+	});
+
+	test.afterAll(async ({ apiClient }) => {
+		try {
+			await cleanupWorkPools(apiClient, TEST_PREFIX);
 		} catch {
 			// Ignore cleanup errors
 		}
@@ -73,7 +85,7 @@ test.describe("Deployments List Page", () => {
 		const flowName = `${TEST_PREFIX}search-flow-${timestamp}`;
 		const depName = `${TEST_PREFIX}search-dep-${timestamp}`;
 		const flow = await createFlow(apiClient, flowName);
-		await createDeployment(apiClient, { name: depName, flowId: flow.id });
+		await createDeployment(apiClient, { name: depName, flowId: flow.id, workPoolName: WORK_POOL_NAME });
 
 		await expect(async () => {
 			await page.goto("/deployments");
@@ -99,6 +111,7 @@ test.describe("Deployments List Page", () => {
 			name: depName,
 			flowId: flow.id,
 			tags: ["e2e-dep-tag"],
+			workPoolName: WORK_POOL_NAME,
 		});
 
 		await expect(async () => {
@@ -123,7 +136,7 @@ test.describe("Deployments List Page", () => {
 		const flowName = `${TEST_PREFIX}sort-flow-${timestamp}`;
 		const depName = `${TEST_PREFIX}sort-dep-${timestamp}`;
 		const flow = await createFlow(apiClient, flowName);
-		await createDeployment(apiClient, { name: depName, flowId: flow.id });
+		await createDeployment(apiClient, { name: depName, flowId: flow.id, workPoolName: WORK_POOL_NAME });
 
 		await page.goto("/deployments");
 		await waitForDeploymentsPageReady(page);
@@ -140,7 +153,7 @@ test.describe("Deployments List Page", () => {
 			const flowName = `${TEST_PREFIX}page-flow-${timestamp}-${String(i).padStart(2, "0")}`;
 			const depName = `${TEST_PREFIX}page-${timestamp}-${String(i).padStart(2, "0")}`;
 			const flow = await createFlow(apiClient, flowName);
-			await createDeployment(apiClient, { name: depName, flowId: flow.id });
+			await createDeployment(apiClient, { name: depName, flowId: flow.id, workPoolName: WORK_POOL_NAME });
 		}
 
 		await expect(async () => {
@@ -166,7 +179,7 @@ test.describe("Deployments List Page", () => {
 		const flowName = `${TEST_PREFIX}detail-flow-${timestamp}`;
 		const depName = `${TEST_PREFIX}detail-dep-${timestamp}`;
 		const flow = await createFlow(apiClient, flowName);
-		await createDeployment(apiClient, { name: depName, flowId: flow.id });
+		await createDeployment(apiClient, { name: depName, flowId: flow.id, workPoolName: WORK_POOL_NAME });
 
 		await expect(async () => {
 			await page.goto(
