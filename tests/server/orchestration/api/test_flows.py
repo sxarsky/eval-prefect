@@ -66,6 +66,17 @@ class TestCreateFlow:
         response = await client.post("/flows/", json=dict(name=name))
         assert response.status_code == 422
 
+    async def test_create_flow_with_version(self, client):
+        flow_data = {"name": "versioned-flow", "version": "1.2.3"}
+        response = await client.post("/flows/", json=flow_data)
+        assert response.status_code == status.HTTP_201_CREATED
+        assert response.json()["version"] == "1.2.3"
+
+    async def test_create_flow_with_invalid_version(self, client):
+        flow_data = {"name": "bad-version-flow", "version": "1.0 beta"}
+        response = await client.post("/flows/", json=flow_data)
+        assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
+
 
 class TestUpdateFlow:
     async def test_update_flow_succeeds(self, session, client):
@@ -110,6 +121,23 @@ class TestUpdateFlow:
             json={},
         )
         assert response.status_code == status.HTTP_404_NOT_FOUND
+
+    async def test_update_flow_version(self, session, client):
+        flow = await models.flows.create_flow(
+            session=session,
+            flow=schemas.core.Flow(name="my-flow-for-version"),
+        )
+        await session.commit()
+
+        response = await client.patch(
+            f"/flows/{str(flow.id)}",
+            json=schemas.actions.FlowUpdate(version="2.0.0").model_dump(),
+        )
+        assert response.status_code == 204
+
+        response = await client.get(f"flows/{flow.id}")
+        updated_flow = parse_obj_as(schemas.core.Flow, response.json())
+        assert updated_flow.version == "2.0.0"
 
 
 class TestReadFlow:
