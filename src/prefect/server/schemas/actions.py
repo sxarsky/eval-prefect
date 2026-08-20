@@ -210,8 +210,8 @@ class DeploymentCreate(ActionBaseModel):
     pull_steps: Optional[List[dict[str, Any]]] = Field(None)
 
     work_queue_name: Optional[str] = Field(None)
-    work_pool_name: Optional[str] = Field(
-        default=None,
+    work_pool_name: str = Field(
+        default=...,  # now required
         description="The name of the deployment's work pool.",
         examples=["my-work-pool"],
     )
