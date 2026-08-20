@@ -5,6 +5,7 @@ Utilities for injecting FastAPI dependencies.
 from __future__ import annotations
 
 import logging
+import os
 import re
 from base64 import b64decode
 from typing import Annotated, Any, Optional
@@ -18,6 +19,25 @@ from starlette.requests import Request
 from prefect._internal.compatibility.starlette import status
 from prefect.server import schemas
 from prefect.settings import PREFECT_API_DEFAULT_LIMIT
+
+
+def require_admin_key(
+    x_admin_key: Optional[str] = Header(None, alias="X-Admin-Key"),
+) -> None:
+    """Require a matching X-Admin-Key header for destructive operations.
+
+    When the ``PREFECT_SERVER_ADMIN_API_KEY`` environment variable is set,
+    callers must send that value in the ``X-Admin-Key`` header. When the
+    variable is unset, the dependency is a no-op.
+    """
+    expected = os.getenv("PREFECT_SERVER_ADMIN_API_KEY")
+    if not expected:
+        return
+    if x_admin_key != expected:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Valid X-Admin-Key header required for this operation.",
+        )
 
 
 def provide_request_api_version(
