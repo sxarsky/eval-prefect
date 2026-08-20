@@ -34,5 +34,5 @@ jobs:
           githubAppId: ${{ secrets.SKYRAMP_TESTBOT_APP_ID }}
           githubAppPrivateKey: ${{ secrets.SKYRAMP_TESTBOT_APP_PRIVATE_KEY }}
           targetSetupCommand: >-
-            docker compose -f $GITHUB_WORKSPACE/docker-compose.eval.yml -p prefect-eval up -d --wait --wait-timeout 600 prefect-server
+            docker compose -f $GITHUB_WORKSPACE/docker-compose.eval.yml -p prefect-eval up -d --wait --wait-timeout 900
           targetTeardownCommand: 'docker compose -f $GITHUB_WORKSPACE/docker-compose.eval.yml -p prefect-eval down -v'
