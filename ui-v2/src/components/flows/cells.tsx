@@ -1,13 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { subWeeks } from "date-fns";
+import { Star } from "lucide-react";
 import { useMemo } from "react";
 import { toast } from "sonner";
 import { buildFilterFlowRunsQuery } from "@/api/flow-runs";
 import {
 	buildDeploymentsCountByFlowQuery,
 	buildNextRunsByFlowQuery,
+	isFlowStarred,
 	useDeleteFlowById,
+	useStarFlow,
+	useUnstarFlow,
 } from "@/api/flows";
 import type { components } from "@/api/prefect";
 import { Button } from "@/components/ui/button";
@@ -217,5 +221,52 @@ export const FlowActivity = ({ row }: { row: { original: Flow } }) => {
 			numberOfBars={NUMBER_OF_ACTIVITY_BARS}
 			className="h-[24px] w-[140px]"
 		/>
+	);
+};
+
+/**
+ * Cell that renders a star toggle. Clicking it stars or unstars the flow.
+ *
+ * Starred flows expose a reserved `starred` label in `flow.labels`.
+ */
+export const FlowStar = ({ row }: { row: { original: Flow } }) => {
+	const { starFlow } = useStarFlow();
+	const { unstarFlow } = useUnstarFlow();
+
+	if (!row.original.id) return null;
+	const starred = isFlowStarred(row.original);
+	const flowId = row.original.id;
+
+	const onClick = (e: React.MouseEvent) => {
+		e.preventDefault();
+		e.stopPropagation();
+		if (starred) {
+			unstarFlow(flowId, {
+				onError: () => toast.error("Failed to unstar flow"),
+			});
+		} else {
+			starFlow(flowId, {
+				onError: () => toast.error("Failed to star flow"),
+			});
+		}
+	};
+
+	return (
+		<Button
+			variant="ghost"
+			size="icon"
+			aria-label={starred ? "Unstar flow" : "Star flow"}
+			aria-pressed={starred}
+			onClick={onClick}
+		>
+			<Star
+				size={16}
+				className={
+					starred
+						? "fill-yellow-400 text-yellow-400"
+						: "text-muted-foreground"
+				}
+			/>
+		</Button>
 	);
 };

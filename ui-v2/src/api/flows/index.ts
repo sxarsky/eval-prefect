@@ -285,3 +285,49 @@ export const useDeleteFlowById = () => {
 
 	return { deleteFlow, ...rest };
 };
+
+/**
+ * Hook for marking a flow as starred.
+ *
+ * Calls POST /flows/{id}/star which sets a reserved `starred` label on the flow.
+ * @returns { starFlow, ...mutation }
+ */
+export const useStarFlow = () => {
+	const queryClient = useQueryClient();
+	const { mutate: starFlow, ...rest } = useMutation({
+		mutationFn: async (id: string) => {
+			const service = await getQueryService();
+			// @ts-expect-error — path not yet in generated spec; backend endpoint is POST /flows/{id}/star
+			return service.POST("/flows/{id}/star", { params: { path: { id } } });
+		},
+		onSettled: () =>
+			queryClient.invalidateQueries({ queryKey: queryKeyFactory.all() }),
+	});
+	return { starFlow, ...rest };
+};
+
+/**
+ * Hook for un-starring a flow.
+ *
+ * Calls DELETE /flows/{id}/star which removes the `starred` label from the flow.
+ * @returns { unstarFlow, ...mutation }
+ */
+export const useUnstarFlow = () => {
+	const queryClient = useQueryClient();
+	const { mutate: unstarFlow, ...rest } = useMutation({
+		mutationFn: async (id: string) => {
+			const service = await getQueryService();
+			// @ts-expect-error — path not yet in generated spec; backend endpoint is DELETE /flows/{id}/star
+			return service.DELETE("/flows/{id}/star", { params: { path: { id } } });
+		},
+		onSettled: () =>
+			queryClient.invalidateQueries({ queryKey: queryKeyFactory.all() }),
+	});
+	return { unstarFlow, ...rest };
+};
+
+/**
+ * True if a flow has been marked starred by the user.
+ */
+export const isFlowStarred = (flow: Flow): boolean =>
+	Boolean(flow.labels?.starred);
