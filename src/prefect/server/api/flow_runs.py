@@ -536,6 +536,17 @@ async def read_flow_runs(
     sort: schemas.sorting.FlowRunSort = Body(schemas.sorting.FlowRunSort.ID_DESC),
     limit: int = dependencies.LimitBody(),
     offset: int = Body(0, ge=0),
+    page: Optional[int] = Body(
+        None,
+        ge=1,
+        description="1-based page number. When provided, overrides offset.",
+    ),
+    page_size: Optional[int] = Body(
+        None,
+        ge=1,
+        le=200,
+        description="Page size. When provided alongside page, overrides limit.",
+    ),
     flows: Optional[schemas.filters.FlowFilter] = None,
     flow_runs: Optional[schemas.filters.FlowRunFilter] = None,
     task_runs: Optional[schemas.filters.TaskRunFilter] = None,
@@ -545,8 +556,14 @@ async def read_flow_runs(
     db: PrefectDBInterface = Depends(provide_database_interface),
 ) -> List[schemas.responses.FlowRunResponse]:
     """
-    Query for flow runs.
+    Query for flow runs. Supports offset+limit or page+page_size pagination.
     """
+    if page is not None or page_size is not None:
+        effective_page = page if page is not None else 1
+        effective_size = page_size if page_size is not None else limit
+        offset = effective_page * effective_size
+        limit = effective_size
+
     async with db.session_context() as session:
         db_flow_runs = await models.flow_runs.read_flow_runs(
             session=session,
