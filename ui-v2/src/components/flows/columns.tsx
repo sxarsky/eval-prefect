@@ -8,6 +8,7 @@ import {
 	FlowLastRun,
 	FlowName,
 	FlowNextRun,
+	FlowStar,
 } from "./cells";
 
 type Flow = components["schemas"]["Flow"];
@@ -29,6 +30,14 @@ export const columns: ColumnDef<Flow>[] = [
 				aria-label="Select row"
 			/>
 		),
+		enableSorting: false,
+		enableHiding: false,
+		maxSize: 10,
+	},
+	{
+		id: "star",
+		header: "",
+		cell: FlowStar,
 		enableSorting: false,
 		enableHiding: false,
 		maxSize: 10,

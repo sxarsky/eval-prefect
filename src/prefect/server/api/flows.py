@@ -5,6 +5,7 @@ Routes for interacting with flow objects.
 from typing import List, Optional
 from uuid import UUID
 
+import sqlalchemy as sa
 from fastapi import Depends, HTTPException, Path, Response, status
 from fastapi.param_functions import Body
 
@@ -258,3 +259,54 @@ async def paginate_flows(
         pages=(count + limit - 1) // limit,
         page=page,
     )
+
+
+STARRED_LABEL_KEY = "starred"
+
+
+@router.post("/{id:uuid}/star", status_code=status.HTTP_200_OK)
+async def star_flow(
+    flow_id: UUID = Path(..., description="The flow id", alias="id"),
+    db: PrefectDBInterface = Depends(provide_database_interface),
+) -> schemas.core.Flow:
+    """
+    Mark a flow as starred by setting a reserved ``starred`` label.
+
+    Idempotent — calling on an already-starred flow is a no-op.
+    """
+    async with db.session_context(begin_transaction=True) as session:
+        flow = await models.flows.read_flow(session=session, flow_id=flow_id)
+        if not flow:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="Flow not found"
+            )
+        new_labels = dict(flow.labels or {})
+        new_labels[STARRED_LABEL_KEY] = True
+        await session.execute(
+            sa.update(db.Flow).where(db.Flow.id == flow_id).values(labels=new_labels)
+        )
+        await session.refresh(flow)
+        return flow
+
+
+@router.delete("/{id:uuid}/star", status_code=status.HTTP_204_NO_CONTENT)
+async def unstar_flow(
+    flow_id: UUID = Path(..., description="The flow id", alias="id"),
+    db: PrefectDBInterface = Depends(provide_database_interface),
+) -> None:
+    """
+    Remove the starred mark from a flow.
+
+    Idempotent — calling on a non-starred flow is a no-op.
+    """
+    async with db.session_context(begin_transaction=True) as session:
+        flow = await models.flows.read_flow(session=session, flow_id=flow_id)
+        if not flow:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="Flow not found"
+            )
+        new_labels = dict(flow.labels or {})
+        new_labels.pop(STARRED_LABEL_KEY, None)
+        await session.execute(
+            sa.update(db.Flow).where(db.Flow.id == flow_id).values(labels=new_labels)
+        )
