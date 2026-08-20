@@ -27,6 +27,13 @@ class TestCreateFlow:
         assert flow_1.name == flow_2.name
         assert flow_1.id == flow_2.id
 
+    async def test_create_flow_with_version(self, session):
+        flow = await models.flows.create_flow(
+            session=session,
+            flow=schemas.core.Flow(name="versioned-flow", version="1.2.3"),
+        )
+        assert flow.version == "1.2.3"
+
 
 class TestUpdateFlow:
     async def test_update_flow_succeeds(self, session):
@@ -73,6 +80,22 @@ class TestUpdateFlow:
                 flow=schemas.actions.FlowUpdate(),
             )
         )
+
+    async def test_update_flow_version(self, session):
+        flow = await models.flows.create_flow(
+            session=session, flow=schemas.core.Flow(name="my-flow-v")
+        )
+        flow_id = flow.id
+
+        update_result = await models.flows.update_flow(
+            session=session,
+            flow_id=flow_id,
+            flow=schemas.actions.FlowUpdate(version="2.0.0"),
+        )
+        assert update_result
+
+        updated_flow = await models.flows.read_flow(session=session, flow_id=flow_id)
+        assert updated_flow.version == "2.0.0"
 
 
 class TestReadFlow:
