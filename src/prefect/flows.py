@@ -114,7 +114,7 @@ F = TypeVar("F", bound="Flow[Any, Any]")  # The type of the flow
 
 class FlowStateHook(Protocol, Generic[P, R]):
     """
-    A callable that is invoked when a flow enters a given state.
+    A callable invoked when a flow enters a given state.
     """
 
     __name__: str
@@ -425,9 +425,11 @@ class Flow(Generic[P, R]):
 
     def __get__(self, instance: Any, owner: Any) -> "Flow[P, R]":
         """
-        Implement the descriptor protocol so that the flow can be used as an instance or class method.
-        When an instance method is loaded, this method is called with the "self" instance as
-        an argument. We return a copy of the flow with that instance bound to the flow's function.
+        Implement the descriptor protocol so the flow can be used as an instance or class method.
+
+        When an instance method is loaded, this method is called with the "self" instance
+        as an argument. Returns a copy of the flow with that instance bound to the flow's
+        function.
         """
         # wrapped function is a classmethod
         if self.isclassmethod:
@@ -480,10 +482,10 @@ class Flow(Generic[P, R]):
                 can be provided as a string template with the flow's parameters as variables,
                 or a function that returns a string.
             task_runner: A new task runner for the flow.
-            timeout_seconds: A new number of seconds to fail the flow after if still
-                running.
-            validate_parameters: A new value indicating if flow calls should validate
-                given parameters.
+            timeout_seconds: A new number of seconds after which the flow will be
+                marked as failed if still running.
+            validate_parameters: A new value indicating whether flow calls should
+                validate their parameters.
             retries: A new number of times to retry on flow run failure.
             retry_delay_seconds: A new number of seconds to wait before retrying the
                 flow after failure. This is only applicable if `retries` is nonzero.
