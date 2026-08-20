@@ -4292,3 +4292,70 @@ class TestDeploymentCRUDEvents:
                 },
             ],
         )
+
+
+class TestDeploymentDefaultParameters:
+    async def test_create_deployment_with_valid_default_parameters(
+        self, client, flow
+    ):
+        data = DeploymentCreate(
+            name="test-default-params",
+            flow_id=flow.id,
+            default_parameters={"timeout": 30, "retry_limit": 3},
+        ).model_dump(mode="json")
+        response = await client.post("/deployments/", json=data)
+        assert response.status_code == status.HTTP_201_CREATED
+        deployment_id = response.json()["id"]
+
+        response = await client.get(f"/deployments/{deployment_id}")
+        assert response.status_code == status.HTTP_200_OK
+        body = response.json()
+        assert body["default_parameters"] == {"timeout": 30, "retry_limit": 3}
+        assert body["validation_warnings"] == []
+
+    async def test_create_deployment_with_empty_default_parameters(
+        self, client, flow
+    ):
+        data = DeploymentCreate(
+            name="test-empty-default-params",
+            flow_id=flow.id,
+            default_parameters={},
+        ).model_dump(mode="json")
+        response = await client.post("/deployments/", json=data)
+        assert response.status_code == status.HTTP_201_CREATED
+        body = response.json()
+        assert body["default_parameters"] == {}
+
+    async def test_create_deployment_without_default_parameters_returns_null(
+        self, client, flow
+    ):
+        data = DeploymentCreate(
+            name="test-null-default-params",
+            flow_id=flow.id,
+        ).model_dump(mode="json")
+        response = await client.post("/deployments/", json=data)
+        assert response.status_code == status.HTTP_201_CREATED
+        body = response.json()
+        assert body["default_parameters"] is None
+
+    async def test_patch_deployment_updates_default_parameters(
+        self, client, flow
+    ):
+        data = DeploymentCreate(
+            name="test-patch-default-params",
+            flow_id=flow.id,
+            default_parameters={"initial_key": "initial_value"},
+        ).model_dump(mode="json")
+        response = await client.post("/deployments/", json=data)
+        assert response.status_code == status.HTTP_201_CREATED
+        deployment_id = response.json()["id"]
+
+        update_data = DeploymentUpdate(
+            default_parameters={"updated_key": "new_value"},
+        ).model_dump(mode="json", exclude_unset=True)
+        response = await client.patch(f"/deployments/{deployment_id}", json=update_data)
+        assert response.status_code == status.HTTP_200_OK
+
+        response = await client.get(f"/deployments/{deployment_id}")
+        assert response.status_code == status.HTTP_200_OK
+        assert response.json()["default_parameters"] == {"updated_key": "new_value"}
