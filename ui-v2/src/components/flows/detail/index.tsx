@@ -1,5 +1,5 @@
 import { useNavigate } from "@tanstack/react-router";
-import { type JSX, useCallback, useState } from "react";
+import { type JSX, useCallback, useEffect, useState } from "react";
 import type { FlowRun } from "@/api/flow-runs";
 import type { Flow } from "@/api/flows";
 import type { components } from "@/api/prefect";
@@ -102,6 +102,44 @@ export default function FlowDetail({
 		onSelectFilter(new Set());
 		clearSet();
 	}, [onFlowRunSearchChange, onSelectFilter, clearSet]);
+
+	// Keyboard shortcuts for tab navigation:
+	// Press `1` → Runs, `2` → Deployments, `3` → Details.
+	// Ignored when any text input or contenteditable element is focused, or when
+	// a modifier key is held.
+	useEffect(() => {
+		const handler = (event: KeyboardEvent) => {
+			if (event.metaKey || event.ctrlKey || event.altKey || event.shiftKey) {
+				return;
+			}
+			const target = event.target as HTMLElement | null;
+			if (target) {
+				const tag = target.tagName;
+				if (
+					tag === "INPUT" ||
+					tag === "TEXTAREA" ||
+					tag === "SELECT" ||
+					target.isContentEditable
+				) {
+					return;
+				}
+			}
+			const shortcutMap: Record<string, "runs" | "deployments" | "details"> = {
+				"1": "runs",
+				"2": "deployments",
+				"3": "details",
+			};
+			const nextTab = shortcutMap[event.key];
+			if (!nextTab || nextTab === tab) return;
+			event.preventDefault();
+			void navigate({
+				to: ".",
+				search: (prev) => ({ ...prev, tab: nextTab }),
+			});
+		};
+		document.addEventListener("keydown", handler);
+		return () => document.removeEventListener("keydown", handler);
+	}, [navigate, tab]);
 
 	return (
 		<>
