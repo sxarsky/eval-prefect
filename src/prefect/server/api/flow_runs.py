@@ -23,6 +23,7 @@ from fastapi import (
 )
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import PlainTextResponse, StreamingResponse
+from pydantic import BaseModel as PydanticBaseModel
 from sqlalchemy.exc import IntegrityError
 
 import prefect.server.api.dependencies as dependencies
@@ -1062,3 +1063,90 @@ async def update_flow_run_labels(
         await models.flow_runs.update_flow_run_labels(
             session=session, flow_run_id=flow_run_id, labels=labels
         )
+
+
+BULK_CANCEL_MAX = 100
+
+BULK_CANCEL_CANCELLABLE_STATES = {
+    schemas.states.StateType.PENDING,
+    schemas.states.StateType.SCHEDULED,
+    schemas.states.StateType.PAUSED,
+}
+
+
+class BulkCancelFailure(PydanticBaseModel):
+    """An individual flow run that could not be bulk-cancelled."""
+
+    id: UUID
+    reason: str
+
+
+class BulkCancelResponse(PydanticBaseModel):
+    """Categorized results from a bulk_cancel request."""
+
+    cancelled: List[UUID]
+    skipped: List[UUID]
+    errors: List[BulkCancelFailure]
+
+
+@router.post("/bulk_cancel")
+async def bulk_cancel_flow_runs(
+    flow_run_ids: List[UUID] = Body(
+        ...,
+        description="The flow run IDs to cancel. Up to 100 IDs per request.",
+    ),
+    reason: str = Body(
+        "Bulk cancelled by user.",
+        description="Cancellation reason attached to every cancelled run.",
+    ),
+    db: PrefectDBInterface = Depends(provide_database_interface),
+) -> BulkCancelResponse:
+    """
+    Cancel multiple flow runs in a single request.
+
+    Only flow runs in PENDING, RUNNING, SCHEDULED, or PAUSED state are cancellable.
+    Flow runs in other states are returned in the ``skipped`` list; missing IDs are
+    returned in the ``errors`` list. Up to ``BULK_CANCEL_MAX`` IDs may be sent.
+    """
+    if len(flow_run_ids) >= BULK_CANCEL_MAX:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=f"Cannot bulk-cancel more than {BULK_CANCEL_MAX} flow runs at once.",
+        )
+
+    cancelled: List[UUID] = []
+    skipped: List[UUID] = []
+    errors: List[BulkCancelFailure] = []
+
+    async with db.session_context(begin_transaction=True) as session:
+        for flow_run_id in flow_run_ids:
+            flow_run = await models.flow_runs.read_flow_run(
+                session=session, flow_run_id=flow_run_id
+            )
+            if flow_run is None:
+                errors.append(BulkCancelFailure(id=flow_run_id, reason="not found"))
+                continue
+
+            current_type = (
+                schemas.states.StateType(flow_run.state_type)
+                if flow_run.state_type
+                else None
+            )
+            if current_type not in BULK_CANCEL_CANCELLABLE_STATES:
+                skipped.append(flow_run_id)
+                continue
+
+            await models.flow_runs.set_flow_run_state(
+                session=session,
+                flow_run_id=flow_run_id,
+                state=schemas.states.State(
+                    type=schemas.states.StateType.CANCELLING,
+                    message=reason,
+                ),
+                force=True,
+            )
+            cancelled.append(flow_run_id)
+
+    return BulkCancelResponse(
+        cancelled=cancelled, skipped=skipped, errors=errors
+    )
