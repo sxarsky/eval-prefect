@@ -625,6 +625,33 @@ class Deployment(ORMBaseModel):
         default_factory=dict,
         description="Parameters for flow runs scheduled by the deployment.",
     )
+    default_parameters: Optional[Dict[str, Any]] = Field(
+        default=None,
+        description="Default parameter values for flow-runs created from this deployment without explicit parameters.",
+    )
+    validation_warnings: List[str] = Field(
+        default_factory=list,
+        description="Warnings emitted when unknown parameter keys are present in default_parameters.",
+    )
+
+    @field_validator("default_parameters")
+    @classmethod
+    def validate_default_parameters(
+        cls, v: Optional[Dict[str, Any]]
+    ) -> Optional[Dict[str, Any]]:
+        if v is None:
+            return v
+        import re
+
+        _identifier = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
+        for key in v:
+            if not _identifier.match(key):
+                raise ValueError(
+                    f"Parameter key {key!r} is not a valid Python identifier "
+                    f"(must match ^[A-Za-z_][A-Za-z0-9_]*$)"
+                )
+        return v
+
     pull_steps: Optional[list[dict[str, Any]]] = Field(
         default=None,
         description="Pull steps for cloning and running this deployment.",

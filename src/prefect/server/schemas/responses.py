@@ -451,6 +451,14 @@ class DeploymentResponse(ORMBaseModel):
         default_factory=dict,
         description="Parameters for flow runs scheduled by the deployment.",
     )
+    default_parameters: Optional[Dict[str, Any]] = Field(
+        default=None,
+        description="Default parameter values for flow-runs created from this deployment without explicit parameters.",
+    )
+    validation_warnings: List[str] = Field(
+        default_factory=list,
+        description="Warnings emitted when unknown parameter keys are present in default_parameters.",
+    )
     tags: List[str] = Field(
         default_factory=list,
         description="A list of tags for the deployment",

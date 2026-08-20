@@ -871,6 +871,9 @@ class Deployment(Base):
     parameters: Mapped[dict[str, Any]] = mapped_column(
         JSON, server_default="{}", default=dict
     )
+    default_parameters: Mapped[Optional[dict[str, Any]]] = mapped_column(
+        sa_JSON, nullable=True
+    )
     pull_steps: Mapped[Optional[list[dict[str, Any]]]] = mapped_column(
         JSON, default=list
     )

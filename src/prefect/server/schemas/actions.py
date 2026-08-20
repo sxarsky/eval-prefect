@@ -197,6 +197,10 @@ class DeploymentCreate(ActionBaseModel):
         description="Parameters for flow runs scheduled by the deployment.",
         json_schema_extra={"additionalProperties": True},
     )
+    default_parameters: Optional[Dict[str, Any]] = Field(
+        default=None,
+        description="Default parameter values applied when a flow-run is created from this deployment without explicit parameters.",
+    )
     tags: List[str] = Field(
         default_factory=list,
         description="A list of deployment tags.",
@@ -316,6 +320,10 @@ class DeploymentUpdate(ActionBaseModel):
     parameters: Optional[Dict[str, Any]] = Field(
         default=None,
         description="Parameters for flow runs scheduled by the deployment.",
+    )
+    default_parameters: Optional[Dict[str, Any]] = Field(
+        default=None,
+        description="Default parameter values applied when a flow-run is created from this deployment without explicit parameters.",
     )
     parameter_openapi_schema: Optional[ParameterSchema] = Field(
         default=None,
