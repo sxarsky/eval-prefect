@@ -2,72 +2,7 @@ name: Skyramp Testbot
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
-    paths:
-      # Common source directories
-      - 'src/**'
-      - 'app/**'
-      - 'lib/**'
-      - 'api/**'
-      - 'server/**'
-      - 'backend/**'
-      - 'frontend/**'
-      - 'web/**'
-      - 'core/**'
-      # Monorepo patterns
-      - 'packages/**'
-      - 'apps/**'
-      - 'services/**'
-      # Go conventions
-      - 'cmd/**'
-      - 'pkg/**'
-      - 'internal/**'
-      # Rust workspaces
-      - 'crates/**'
-      # Serverless
-      - 'functions/**'
-      # Frontend framework conventions
-      - 'pages/**'
-      - 'components/**'
-      # Ruby/Rails
-      - 'db/**'
-      - 'config/**'
-      # Common web patterns
-      - 'routes/**'
-      - 'controllers/**'
-      - 'models/**'
-      - 'views/**'
-      - 'handlers/**'
-      - 'middleware/**'
-      # Tests
-      - 'tests/**'
-      - 'test/**'
-      - 'spec/**'
-      # Build and dependency files
-      - 'package.json'
-      - 'package-lock.json'
-      - 'yarn.lock'
-      - 'pnpm-lock.yaml'
-      - 'pyproject.toml'
-      - 'setup.py'
-      - 'setup.cfg'
-      - 'requirements*.txt'
-      - 'Pipfile'
-      - 'poetry.lock'
-      - 'go.mod'
-      - 'go.sum'
-      - 'Cargo.toml'
-      - 'Cargo.lock'
-      - 'pom.xml'
-      - 'build.gradle'
-      - 'build.gradle.kts'
-      - 'Gemfile'
-      - 'Gemfile.lock'
-      - '*.csproj'
-      - '*.sln'
-      - 'Dockerfile'
-      - 'docker-compose.yml'
-      - 'docker-compose.yaml'
+    types: [opened, synchronize, reopened, closed]
   issue_comment:
     types: [created]
 
@@ -77,45 +12,28 @@ concurrency:
 
 jobs:
   testbot:
-    # Only run for pull_request events or issue_comment on PRs mentioning @skyramp-testbot
     if: >-
       github.event_name == 'pull_request' ||
-      (github.event_name == 'issue_comment' && github.event.issue.pull_request && contains(github.event.comment.body, '@skyramp-testbot'))
-    runs-on: ubuntu-latest
+      (github.event_name == 'issue_comment' && github.event.issue.pull_request && contains(github.event.comment.body, '@skyramp-testbot') && github.event.comment.user.login != 'skyramp-testbot[bot]')
+    runs-on: 'ubuntu-latest'
     permissions:
       contents: write
       pull-requests: write
       checks: write
-
     steps:
-      # Generate a GitHub App installation token to retrigger CI workflows on push
-      # https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/making-authenticated-api-requests-with-a-github-app-in-a-github-actions-workflow
-      - name: Generate GitHub App Token
-        id: app-token
-        uses: actions/create-github-app-token@d72941d797fd3113feb6b93fd0dec494b13a2547 # v1
-        with:
-          app-id: ${{ secrets.SKYRAMP_TESTBOT_APP_ID }}
-          private-key: ${{ secrets.SKYRAMP_TESTBOT_APP_PRIVATE_KEY }}
-
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
           fetch-depth: 0
-          token: ${{ steps.app-token.outputs.token }}
-
-      - uses: skyramp/testbot@87752cf8ab396b6aa73c47069e79834bd1c75eda # v0.11.5
+          submodules: recursive
+      - uses: skyramp/testbot@15b35b4f7fc705aa12e96bb0aa65e238738ccdb7 # v0.11.7
         with:
+          skyrampMcpVersion: "0.3.3"
+          skyrampExecutorVersion: "v1.3.39"
           skyrampLicenseFile: ${{ secrets.SKYRAMP_LICENSE_FILE }}
           anthropicApiKey: ${{ secrets.SKYRAMP_TESTBOT_API_KEY }}
-          githubToken: ${{ steps.app-token.outputs.token }}
-          skyrampMcpVersion: 0.3.2
-          skyrampExecutorVersion: v1.3.37
-
-          targetSetupCommand: 'docker compose -f docker-compose.eval.yml up -d'
-          targetReadyCheckCommand: 'curl -sf http://localhost:4200/api/health'
-          targetReadyCheckTimeout: 180
-          authTokenCommand: 'echo skyramp-test-token'
-
-          testDirectory: 'tests/server/api'
-          autoCommit: true
-          postPrComment: true
-          enableDebug: true
+          model: sonnet
+          githubAppId: ${{ secrets.SKYRAMP_TESTBOT_APP_ID }}
+          githubAppPrivateKey: ${{ secrets.SKYRAMP_TESTBOT_APP_PRIVATE_KEY }}
+          targetSetupCommand: >-
+            docker compose -f $GITHUB_WORKSPACE/docker-compose.eval.yml -p prefect-eval up -d --wait --wait-timeout 900
+          targetTeardownCommand: 'docker compose -f $GITHUB_WORKSPACE/docker-compose.eval.yml -p prefect-eval down -v'
