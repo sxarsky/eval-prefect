@@ -1,0 +1,167 @@
+[
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"name\": \"tb-legacy-offset-flow\"}",
+    "ResponseBody": "{\"id\": \"5e8b3c07-9a42-4d6f-8115-7c0e2f94ab63\", \"name\": \"tb-legacy-offset-flow\", \"tags\": [], \"labels\": {}}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/flows/",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 4200,
+    "Timestamp": "2026-08-26T19:15:09.591Z",
+    "Scheme": "http",
+    "scenarioName": "flow_runs_filter_legacy_offset_limit_preserved",
+    "UniqueFields": [
+      "name"
+    ]
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"flow_id\": \"5e8b3c07-9a42-4d6f-8115-7c0e2f94ab63\", \"name\": \"fr1\"}",
+    "ResponseBody": "{\"id\": \"d4a71be5-8f60-4c23-b194-5e0d2a37c468\", \"name\": \"fr1\"}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/flow_runs/",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 4200,
+    "Timestamp": "2026-08-26T19:15:10.591Z",
+    "Scheme": "http",
+    "scenarioName": "flow_runs_filter_legacy_offset_limit_preserved"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"flow_id\": \"5e8b3c07-9a42-4d6f-8115-7c0e2f94ab63\", \"name\": \"fr2\"}",
+    "ResponseBody": "{\"id\": \"e5b82cf6-9071-4d34-c2a5-6f1e3b48d579\", \"name\": \"fr2\"}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/flow_runs/",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 4200,
+    "Timestamp": "2026-08-26T19:15:11.591Z",
+    "Scheme": "http",
+    "scenarioName": "flow_runs_filter_legacy_offset_limit_preserved"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"flow_id\": \"5e8b3c07-9a42-4d6f-8115-7c0e2f94ab63\", \"name\": \"fr3\"}",
+    "ResponseBody": "{\"id\": \"f6c93da7-a182-4e45-d3b6-701f4c59e68a\", \"name\": \"fr3\"}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/flow_runs/",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 4200,
+    "Timestamp": "2026-08-26T19:15:12.591Z",
+    "Scheme": "http",
+    "scenarioName": "flow_runs_filter_legacy_offset_limit_preserved"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"flows\": {\"id\": {\"any_\": [\"5e8b3c07-9a42-4d6f-8115-7c0e2f94ab63\"]}}, \"sort\": \"NAME_ASC\", \"offset\": 0, \"limit\": 2}",
+    "ResponseBody": "[{\"id\": \"d4a71be5-8f60-4c23-b194-5e0d2a37c468\", \"name\": \"fr1\"}, {\"id\": \"e5b82cf6-9071-4d34-c2a5-6f1e3b48d579\", \"name\": \"fr2\"}]",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/flow_runs/filter",
+    "QueryParams": {},
+    "StatusCode": 200,
+    "Port": 4200,
+    "Timestamp": "2026-08-26T19:15:13.591Z",
+    "Scheme": "http",
+    "scenarioName": "flow_runs_filter_legacy_offset_limit_preserved"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"flows\": {\"id\": {\"any_\": [\"5e8b3c07-9a42-4d6f-8115-7c0e2f94ab63\"]}}, \"sort\": \"NAME_ASC\", \"offset\": 2, \"limit\": 2}",
+    "ResponseBody": "[{\"id\": \"f6c93da7-a182-4e45-d3b6-701f4c59e68a\", \"name\": \"fr3\"}]",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/flow_runs/filter",
+    "QueryParams": {},
+    "StatusCode": 200,
+    "Port": 4200,
+    "Timestamp": "2026-08-26T19:15:14.591Z",
+    "Scheme": "http",
+    "scenarioName": "flow_runs_filter_legacy_offset_limit_preserved"
+  }
+]
