@@ -1,0 +1,80 @@
+[
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"name\": \"skyramp-sched-bypass-flow\"}",
+    "ResponseBody": "{\"id\": \"3f2a91c4-7d5e-4b18-9a63-2c8e1f40db77\", \"name\": \"skyramp-sched-bypass-flow\", \"tags\": [], \"labels\": {}}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/flows/",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 4200,
+    "Timestamp": "2026-08-26T18:52:53.995Z",
+    "Scheme": "http",
+    "scenarioName": "deployment_schedule_delete_bypasses_admin_key",
+    "UniqueFields": [
+      "name"
+    ]
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"name\": \"skyramp-sched-bypass-dep\", \"flow_id\": \"3f2a91c4-7d5e-4b18-9a63-2c8e1f40db77\", \"schedules\": [{\"schedule\": {\"interval\": 3600}, \"active\": true}]}",
+    "ResponseBody": "{\"id\": \"8c14e7b2-5a39-4d06-b7f1-6e920ac35d84\", \"name\": \"skyramp-sched-bypass-dep\", \"flow_id\": \"3f2a91c4-7d5e-4b18-9a63-2c8e1f40db77\", \"paused\": false, \"schedules\": [{\"id\": \"d51b0f68-9c27-4a83-8e15-73ba2d604f19\", \"deployment_id\": \"8c14e7b2-5a39-4d06-b7f1-6e920ac35d84\", \"active\": true}]}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/deployments/",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 4200,
+    "Timestamp": "2026-08-26T18:52:54.995Z",
+    "Scheme": "http",
+    "scenarioName": "deployment_schedule_delete_bypasses_admin_key",
+    "UniqueFields": [
+      "name"
+    ]
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "",
+    "ResponseBody": "{\"detail\": \"Valid X-Admin-Key header required for this operation.\"}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "DELETE",
+    "Path": "/api/deployments/8c14e7b2-5a39-4d06-b7f1-6e920ac35d84/schedules/d51b0f68-9c27-4a83-8e15-73ba2d604f19",
+    "QueryParams": {},
+    "StatusCode": 401,
+    "Port": 4200,
+    "Timestamp": "2026-08-26T18:52:55.995Z",
+    "Scheme": "http",
+    "scenarioName": "deployment_schedule_delete_bypasses_admin_key"
+  }
+]
