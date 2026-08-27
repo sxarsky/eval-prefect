@@ -1,0 +1,371 @@
+[
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"name\": \"wq-isolation-pool\", \"type\": \"process\"}",
+    "ResponseBody": "{\"id\": \"3f2b9c14-7d81-4a6e-9b02-5c8ad14e6f37\", \"name\": \"wq-isolation-pool\", \"type\": \"process\", \"is_paused\": false}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/work_pools/",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 4200,
+    "Timestamp": "2026-08-27T00:23:40.960Z",
+    "Scheme": "http",
+    "scenarioName": "work_queue_stats_cross_queue_isolation",
+    "UniqueFields": [
+      "name"
+    ]
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"name\": \"wq-isolation-queue-a\"}",
+    "ResponseBody": "{\"id\": \"8c41d5a2-6e93-4f18-b7c5-2a09e3d4b861\", \"name\": \"wq-isolation-queue-a\"}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/work_pools/wq-isolation-pool/queues",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 4200,
+    "Timestamp": "2026-08-27T00:23:41.960Z",
+    "Scheme": "http",
+    "scenarioName": "work_queue_stats_cross_queue_isolation",
+    "UniqueFields": [
+      "name"
+    ]
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"name\": \"wq-isolation-queue-b\"}",
+    "ResponseBody": "{\"id\": \"5d76e0b3-1c48-49af-8e26-7b3f9a01c4d5\", \"name\": \"wq-isolation-queue-b\"}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/work_pools/wq-isolation-pool/queues",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 4200,
+    "Timestamp": "2026-08-27T00:23:42.960Z",
+    "Scheme": "http",
+    "scenarioName": "work_queue_stats_cross_queue_isolation",
+    "UniqueFields": [
+      "name"
+    ]
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"name\": \"wq-isolation-flow\"}",
+    "ResponseBody": "{\"id\": \"b19a7f6c-4d25-4e83-95c1-0f8e2a6b7d34\", \"name\": \"wq-isolation-flow\"}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/flows/",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 4200,
+    "Timestamp": "2026-08-27T00:23:43.960Z",
+    "Scheme": "http",
+    "scenarioName": "work_queue_stats_cross_queue_isolation",
+    "UniqueFields": [
+      "name"
+    ]
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"name\": \"wq-isolation-deployment-a\", \"flow_id\": \"b19a7f6c-4d25-4e83-95c1-0f8e2a6b7d34\", \"work_pool_name\": \"wq-isolation-pool\", \"work_queue_name\": \"wq-isolation-queue-a\"}",
+    "ResponseBody": "{\"id\": \"2e8c3b70-9a14-4d6f-b853-6c17f2e094ab\", \"name\": \"wq-isolation-deployment-a\"}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/deployments/",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 4200,
+    "Timestamp": "2026-08-27T00:23:44.960Z",
+    "Scheme": "http",
+    "scenarioName": "work_queue_stats_cross_queue_isolation",
+    "UniqueFields": [
+      "name"
+    ]
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"name\": \"wq-isolation-deployment-b\", \"flow_id\": \"b19a7f6c-4d25-4e83-95c1-0f8e2a6b7d34\", \"work_pool_name\": \"wq-isolation-pool\", \"work_queue_name\": \"wq-isolation-queue-b\"}",
+    "ResponseBody": "{\"id\": \"71f4a986-3b52-4c07-9d68-e5a2c8140b39\", \"name\": \"wq-isolation-deployment-b\"}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/deployments/",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 4200,
+    "Timestamp": "2026-08-27T00:23:45.960Z",
+    "Scheme": "http",
+    "scenarioName": "work_queue_stats_cross_queue_isolation",
+    "UniqueFields": [
+      "name"
+    ]
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"state\": {\"type\": \"SCHEDULED\"}}",
+    "ResponseBody": "{\"id\": \"c6a25e18-8f30-4b91-a742-9d05b3e6f2c8\", \"name\": \"isolation-run-a1\"}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/deployments/2e8c3b70-9a14-4d6f-b853-6c17f2e094ab/create_flow_run",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 4200,
+    "Timestamp": "2026-08-27T00:23:46.960Z",
+    "Scheme": "http",
+    "scenarioName": "work_queue_stats_cross_queue_isolation"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"state\": {\"type\": \"SCHEDULED\"}}",
+    "ResponseBody": "{\"id\": \"9a3e7c05-2d61-48b7-8f14-c6b09e5a3d72\", \"name\": \"isolation-run-b1\"}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/deployments/71f4a986-3b52-4c07-9d68-e5a2c8140b39/create_flow_run",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 4200,
+    "Timestamp": "2026-08-27T00:23:47.960Z",
+    "Scheme": "http",
+    "scenarioName": "work_queue_stats_cross_queue_isolation"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"state\": {\"type\": \"SCHEDULED\"}}",
+    "ResponseBody": "{\"id\": \"4b8d1f62-7a09-45c3-91e8-3d5c7a2b0e94\", \"name\": \"isolation-run-b2\"}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/deployments/71f4a986-3b52-4c07-9d68-e5a2c8140b39/create_flow_run",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 4200,
+    "Timestamp": "2026-08-27T00:23:48.960Z",
+    "Scheme": "http",
+    "scenarioName": "work_queue_stats_cross_queue_isolation"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "",
+    "ResponseBody": "{\"running\": 0, \"pending\": 0, \"scheduled_count\": 1}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "GET",
+    "Path": "/api/work_queues/8c41d5a2-6e93-4f18-b7c5-2a09e3d4b861/stats",
+    "QueryParams": {},
+    "StatusCode": 200,
+    "Port": 4200,
+    "Timestamp": "2026-08-27T00:23:49.960Z",
+    "Scheme": "http",
+    "scenarioName": "work_queue_stats_cross_queue_isolation"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "",
+    "ResponseBody": "{\"running\": 0, \"pending\": 0, \"scheduled_count\": 2}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "GET",
+    "Path": "/api/work_queues/5d76e0b3-1c48-49af-8e26-7b3f9a01c4d5/stats",
+    "QueryParams": {},
+    "StatusCode": 200,
+    "Port": 4200,
+    "Timestamp": "2026-08-27T00:23:50.960Z",
+    "Scheme": "http",
+    "scenarioName": "work_queue_stats_cross_queue_isolation"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "",
+    "ResponseBody": "{}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "DELETE",
+    "Path": "/api/work_pools/wq-isolation-pool",
+    "QueryParams": {},
+    "StatusCode": 204,
+    "Port": 4200,
+    "Timestamp": "2026-08-27T00:23:51.960Z",
+    "Scheme": "http",
+    "scenarioName": "work_queue_stats_cross_queue_isolation"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "",
+    "ResponseBody": "{}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "DELETE",
+    "Path": "/api/flows/b19a7f6c-4d25-4e83-95c1-0f8e2a6b7d34",
+    "QueryParams": {},
+    "StatusCode": 204,
+    "Port": 4200,
+    "Timestamp": "2026-08-27T00:23:52.960Z",
+    "Scheme": "http",
+    "scenarioName": "work_queue_stats_cross_queue_isolation"
+  }
+]
