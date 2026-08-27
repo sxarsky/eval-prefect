@@ -1,0 +1,113 @@
+[
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"name\": \"test-consistency-queue\"}",
+    "ResponseBody": "{\"id\": \"c1d2e3f4-a5b6-7890-abcd-ef1234567890\", \"name\": \"test-consistency-queue\"}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/api/work_queues/",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 4200,
+    "Timestamp": "2026-08-27T03:40:07.371Z",
+    "Scheme": "http",
+    "scenarioName": "work-queue-stats-consistency",
+    "UniqueFields": [
+      "name"
+    ]
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "",
+    "ResponseBody": "{\"running\": 0, \"pending\": 0, \"scheduled_count\": 0}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "GET",
+    "Path": "/api/api/work_queues/c1d2e3f4-a5b6-7890-abcd-ef1234567890/stats",
+    "QueryParams": {},
+    "StatusCode": 200,
+    "Port": 4200,
+    "Timestamp": "2026-08-27T03:40:08.371Z",
+    "Scheme": "http",
+    "scenarioName": "work-queue-stats-consistency"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "",
+    "ResponseBody": "{\"id\": \"c1d2e3f4-a5b6-7890-abcd-ef1234567890\", \"name\": \"test-consistency-queue\", \"stats\": {\"running\": 0, \"pending\": 0, \"scheduled_count\": 0}}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "GET",
+    "Path": "/api/api/work_queues/c1d2e3f4-a5b6-7890-abcd-ef1234567890",
+    "QueryParams": {},
+    "StatusCode": 200,
+    "Port": 4200,
+    "Timestamp": "2026-08-27T03:40:09.371Z",
+    "Scheme": "http",
+    "scenarioName": "work-queue-stats-consistency"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "",
+    "ResponseBody": "{}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "DELETE",
+    "Path": "/api/api/work_queues/c1d2e3f4-a5b6-7890-abcd-ef1234567890",
+    "QueryParams": {},
+    "StatusCode": 204,
+    "Port": 4200,
+    "Timestamp": "2026-08-27T03:40:10.371Z",
+    "Scheme": "http",
+    "scenarioName": "work-queue-stats-consistency"
+  }
+]
