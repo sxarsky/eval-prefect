@@ -125,7 +125,13 @@ async def read_work_queue(
 ) -> schemas.responses.WorkQueueResponse:
     """
     Get a work queue by id.
+
+    The response includes a nested ``stats`` block with the same counts
+    served by ``GET /api/work_queues/{id}/stats`` — the two surfaces read
+    from the same aggregation helper so every field agrees.
     """
+    from prefect.server.services.work_queue_stats import compute_work_queue_stats
+
     async with db.session_context() as session:
         work_queue = await models.work_queues.read_work_queue(
             session=session, work_queue_id=work_queue_id
@@ -143,7 +149,39 @@ async def read_work_queue(
                     session=session, work_queue_id=work_queue_id
                 )
             )
+        stats = await compute_work_queue_stats(
+            session=session, work_queue_id=work_queue_id
+        )
+        response.stats = schemas.responses.WorkQueueStats(**stats)
     return response
+
+
+@router.get("/{id:uuid}/stats")
+async def read_work_queue_stats(
+    work_queue_id: UUID = Path(..., description="The work queue id", alias="id"),
+    db: PrefectDBInterface = Depends(provide_database_interface),
+) -> schemas.responses.WorkQueueStats:
+    """
+    Aggregate flow-run counts for a work queue.
+
+    Returns the same body shape that the parent ``GET /api/work_queues/{id}``
+    response embeds as its ``stats`` block — both surfaces call the same
+    aggregation helper so the counts agree exactly.
+    """
+    from prefect.server.services.work_queue_stats import compute_work_queue_stats
+
+    async with db.session_context() as session:
+        work_queue = await models.work_queues.read_work_queue(
+            session=session, work_queue_id=work_queue_id
+        )
+        if not work_queue:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="work queue not found"
+            )
+        stats = await compute_work_queue_stats(
+            session=session, work_queue_id=work_queue_id
+        )
+        return schemas.responses.WorkQueueStats(**stats)
 
 
 @router.post("/{id:uuid}/get_runs")
