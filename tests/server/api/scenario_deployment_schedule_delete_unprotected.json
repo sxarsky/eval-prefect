@@ -1,0 +1,116 @@
+[
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"name\": \"skyramp-sched-guard-flow\"}",
+    "ResponseBody": "{\"id\": \"0d3e6f81-1a74-4b98-9325-6d7e8f9a0b41\", \"name\": \"skyramp-sched-guard-flow\"}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/flows/",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 4200,
+    "Timestamp": "2026-08-28T22:37:42.168Z",
+    "Scheme": "http",
+    "scenarioName": "deployment_schedule_delete_unprotected",
+    "UniqueFields": [
+      "name"
+    ]
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"name\": \"skyramp-sched-guard-deployment\", \"flow_id\": \"0d3e6f81-1a74-4b98-9325-6d7e8f9a0b41\"}",
+    "ResponseBody": "{\"id\": \"1e4f7a92-2b85-4ca9-8436-7e8f9a0b1c52\", \"name\": \"skyramp-sched-guard-deployment\", \"flow_id\": \"0d3e6f81-1a74-4b98-9325-6d7e8f9a0b41\"}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/deployments/",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 4200,
+    "Timestamp": "2026-08-28T22:37:43.168Z",
+    "Scheme": "http",
+    "scenarioName": "deployment_schedule_delete_unprotected",
+    "UniqueFields": [
+      "name"
+    ]
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "[{\"schedule\": {\"interval\": 3600}}]",
+    "ResponseBody": "[{\"id\": \"2f5a8b03-3c96-4dba-9547-8f9a0b1c2d63\", \"deployment_id\": \"1e4f7a92-2b85-4ca9-8436-7e8f9a0b1c52\", \"active\": true}]",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/deployments/1e4f7a92-2b85-4ca9-8436-7e8f9a0b1c52/schedules",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 4200,
+    "Timestamp": "2026-08-28T22:37:44.168Z",
+    "Scheme": "http",
+    "scenarioName": "deployment_schedule_delete_unprotected"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "",
+    "ResponseBody": "{}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "DELETE",
+    "Path": "/api/deployments/1e4f7a92-2b85-4ca9-8436-7e8f9a0b1c52/schedules/2f5a8b03-3c96-4dba-9547-8f9a0b1c2d63",
+    "QueryParams": {},
+    "StatusCode": 401,
+    "Port": 4200,
+    "Timestamp": "2026-08-28T22:37:45.168Z",
+    "Scheme": "http",
+    "scenarioName": "deployment_schedule_delete_unprotected"
+  }
+]
