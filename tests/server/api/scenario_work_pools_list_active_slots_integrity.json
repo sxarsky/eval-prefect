@@ -1,0 +1,86 @@
+[
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"name\": \"sk-slots-pool\", \"type\": \"process\", \"concurrency_limit\": 5}",
+    "ResponseBody": "{\"id\": \"c5039447-81ab-4a09-ac92-6c620e43b623\", \"name\": \"sk-slots-pool\", \"type\": \"process\", \"concurrency_limit\": 5, \"is_paused\": false, \"active_slots\": 0}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/work_pools/",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 4200,
+    "Timestamp": "2026-08-28T22:37:14.378Z",
+    "Scheme": "http",
+    "scenarioName": "work_pools_list_active_slots_integrity",
+    "UniqueFields": [
+      "name"
+    ]
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "",
+    "ResponseBody": "[{\"id\": \"c5039447-81ab-4a09-ac92-6c620e43b623\", \"name\": \"sk-slots-pool\", \"type\": \"process\", \"concurrency_limit\": 5, \"is_paused\": false, \"active_slots\": 0}]",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "GET",
+    "Path": "/api/work_pools/",
+    "QueryParams": {},
+    "StatusCode": 200,
+    "Port": 4200,
+    "Timestamp": "2026-08-28T22:37:15.378Z",
+    "Scheme": "http",
+    "scenarioName": "work_pools_list_active_slots_integrity"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"limit\": 200, \"offset\": 0}",
+    "ResponseBody": "[{\"id\": \"c5039447-81ab-4a09-ac92-6c620e43b623\", \"name\": \"sk-slots-pool\", \"type\": \"process\", \"concurrency_limit\": 5, \"is_paused\": false, \"active_slots\": 0}]",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/work_pools/filter",
+    "QueryParams": {},
+    "StatusCode": 200,
+    "Port": 4200,
+    "Timestamp": "2026-08-28T22:37:16.378Z",
+    "Scheme": "http",
+    "scenarioName": "work_pools_list_active_slots_integrity"
+  }
+]
