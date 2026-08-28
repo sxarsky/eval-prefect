@@ -1,5 +1,10 @@
 """
 Routes for interacting with flow objects.
+
+Note: the legacy ``POST /api/flows/{id}/run-legacy`` handler was retired;
+callers now receive the framework's default 404. Neighboring flow
+endpoints (``GET /api/flows``, ``GET /api/flows/{id}``, list-of-runs
+routes) are unchanged.
 """
 
 from typing import List, Optional
