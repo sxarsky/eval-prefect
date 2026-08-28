@@ -1,0 +1,173 @@
+[
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"name\": \"tb-stats-pool-1\", \"type\": \"process\"}",
+    "ResponseBody": "{\"id\": \"0a1b2c3d-4e5f-4a6b-8c7d-9e0f1a2b3c4d\", \"name\": \"tb-stats-pool-1\", \"type\": \"process\"}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/work_pools/",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 4200,
+    "Timestamp": "2026-08-28T22:36:15.523Z",
+    "Scheme": "http",
+    "scenarioName": "work_queue_stats_counts_name_routed_scheduled_runs",
+    "UniqueFields": [
+      "name"
+    ]
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"name\": \"tb-stats-queue-1\"}",
+    "ResponseBody": "{\"id\": \"b7e41d92-6c38-4f5a-9d21-3ea8c05f7b64\", \"name\": \"tb-stats-queue-1\", \"work_pool_name\": \"tb-stats-pool-1\", \"stats\": null}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/work_pools/tb-stats-pool-1/queues",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 4200,
+    "Timestamp": "2026-08-28T22:36:16.523Z",
+    "Scheme": "http",
+    "scenarioName": "work_queue_stats_counts_name_routed_scheduled_runs",
+    "UniqueFields": [
+      "name"
+    ]
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"name\": \"tb-stats-flow-1\"}",
+    "ResponseBody": "{\"id\": \"c93f5a10-2b47-4e8d-8a16-5f0d9c2e4187\", \"name\": \"tb-stats-flow-1\"}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/flows/",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 4200,
+    "Timestamp": "2026-08-28T22:36:17.523Z",
+    "Scheme": "http",
+    "scenarioName": "work_queue_stats_counts_name_routed_scheduled_runs",
+    "UniqueFields": [
+      "name"
+    ]
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"flow_id\": \"c93f5a10-2b47-4e8d-8a16-5f0d9c2e4187\", \"work_pool_name\": \"tb-stats-pool-1\", \"work_queue_name\": \"tb-stats-queue-1\", \"state\": {\"type\": \"SCHEDULED\", \"state_details\": {\"scheduled_time\": \"2027-01-01T00:00:00Z\"}}}",
+    "ResponseBody": "{\"id\": \"d4a72c68-8e15-4b93-9c07-6ab1f3d50e29\", \"work_queue_name\": \"tb-stats-queue-1\", \"state\": {\"type\": \"SCHEDULED\"}}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/flow_runs/",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 4200,
+    "Timestamp": "2026-08-28T22:36:18.523Z",
+    "Scheme": "http",
+    "scenarioName": "work_queue_stats_counts_name_routed_scheduled_runs"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"flow_id\": \"c93f5a10-2b47-4e8d-8a16-5f0d9c2e4187\", \"work_queue_name\": \"tb-stats-queue-1\", \"state\": {\"type\": \"SCHEDULED\", \"state_details\": {\"scheduled_time\": \"2027-01-01T00:00:00Z\"}}}",
+    "ResponseBody": "{\"id\": \"e5b83d79-9f26-4ca4-8d18-7bc2e4a61f3a\", \"work_queue_name\": \"tb-stats-queue-1\", \"work_queue_id\": null, \"state\": {\"type\": \"SCHEDULED\"}}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/flow_runs/",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 4200,
+    "Timestamp": "2026-08-28T22:36:19.523Z",
+    "Scheme": "http",
+    "scenarioName": "work_queue_stats_counts_name_routed_scheduled_runs"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "",
+    "ResponseBody": "{\"running\": 0, \"pending\": 0, \"scheduled_count\": 2}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "X-Admin-Key": [
+        "SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "GET",
+    "Path": "/api/work_queues/b7e41d92-6c38-4f5a-9d21-3ea8c05f7b64/stats",
+    "QueryParams": {},
+    "StatusCode": 200,
+    "Port": 4200,
+    "Timestamp": "2026-08-28T22:36:20.523Z",
+    "Scheme": "http",
+    "scenarioName": "work_queue_stats_counts_name_routed_scheduled_runs"
+  }
+]
