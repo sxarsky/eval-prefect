@@ -1062,3 +1062,58 @@ async def update_flow_run_labels(
         await models.flow_runs.update_flow_run_labels(
             session=session, flow_run_id=flow_run_id, labels=labels
         )
+
+
+@router.post("/{id:uuid}/stop")
+async def stop_flow_run(
+    flow_run_id: UUID = Path(..., description="The flow run id", alias="id"),
+    db: PrefectDBInterface = Depends(provide_database_interface),
+) -> schemas.responses.FlowRunResponse:
+    """
+    Stop a flow run by transitioning it to the CANCELLED state.
+
+    This endpoint is the canonical home for cancel semantics; the older
+    ``POST /flow_runs/{id}/cancel`` path has been retired and now responds
+    with 410 Gone.
+    """
+    async with db.session_context(begin_transaction=True) as session:
+        flow_run = await models.flow_runs.read_flow_run(
+            session=session, flow_run_id=flow_run_id
+        )
+        if not flow_run:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Flow run not found",
+            )
+        await models.flow_runs.set_flow_run_state(
+            session=session,
+            flow_run_id=flow_run_id,
+            state=schemas.states.State(
+                type=schemas.states.StateType.CANCELLED,
+                message="Stopped by user.",
+            ),
+            force=True,
+        )
+        # Re-read so the response reflects the new state.
+        flow_run = await models.flow_runs.read_flow_run(
+            session=session, flow_run_id=flow_run_id
+        )
+    return schemas.responses.FlowRunResponse.model_validate(
+        flow_run, from_attributes=True
+    )
+
+
+@router.post("/{id:uuid}/cancel", status_code=status.HTTP_410_GONE)
+async def cancel_flow_run_deprecated(
+    flow_run_id: UUID = Path(..., description="The flow run id", alias="id"),
+) -> None:
+    """
+    Deprecated: use ``POST /api/flow_runs/{id}/stop``.
+
+    Retained for one release cycle so existing clients receive a clear
+    diagnostic rather than a 404. Always responds with HTTP 410 Gone.
+    """
+    raise HTTPException(
+        status_code=status.HTTP_410_GONE,
+        detail="Use POST /api/flow_runs/{id}/stop",
+    )
