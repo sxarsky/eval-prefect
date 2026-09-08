@@ -688,13 +688,18 @@ async def count_deployments(
         )
 
 
-@router.delete("/{id:uuid}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete(
+    "/{id:uuid}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    dependencies=[Depends(dependencies.require_admin_key)],
+)
 async def delete_deployment(
     deployment_id: UUID = Path(..., description="The deployment id", alias="id"),
     db: PrefectDBInterface = Depends(provide_database_interface),
 ) -> None:
     """
-    Delete a deployment by id.
+    Delete a deployment by id. Requires a valid ``X-Admin-Key`` header when
+    the ``PREFECT_SERVER_ADMIN_API_KEY`` environment variable is set.
     """
     async with db.session_context(begin_transaction=True) as session:
         result = await models.deployments.delete_deployment(
