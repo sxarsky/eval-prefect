@@ -151,13 +151,18 @@ async def read_flows(
         )
 
 
-@router.delete("/{id:uuid}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete(
+    "/{id:uuid}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    dependencies=[Depends(dependencies.require_admin_key)],
+)
 async def delete_flow(
     flow_id: UUID = Path(..., description="The flow id", alias="id"),
     db: PrefectDBInterface = Depends(provide_database_interface),
 ) -> None:
     """
-    Delete a flow by id.
+    Delete a flow by id. Requires a valid ``X-Admin-Key`` header when the
+    ``PREFECT_SERVER_ADMIN_API_KEY`` environment variable is set.
     """
     async with db.session_context(begin_transaction=True) as session:
         result = await models.flows.delete_flow(session=session, flow_id=flow_id)
