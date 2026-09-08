@@ -1,0 +1,104 @@
+[
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"name\": \"test-flow-for-deploy-auth\"}",
+    "ResponseBody": "{\"id\": \"b1c2d3e4-f5a6-7890-bcde-f12345678901\", \"name\": \"test-flow-for-deploy-auth\"}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/flows/",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 4200,
+    "Timestamp": "2026-09-08T21:02:58.892Z",
+    "Scheme": "http",
+    "scenarioName": "delete_deployment_unauthorized",
+    "UniqueFields": [
+      "name"
+    ]
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "{\"name\": \"test-deployment-auth-boundary\", \"flow_id\": \"b1c2d3e4-f5a6-7890-bcde-f12345678901\"}",
+    "ResponseBody": "{\"id\": \"c2d3e4f5-a6b7-8901-cdef-123456789012\", \"name\": \"test-deployment-auth-boundary\", \"flow_id\": \"b1c2d3e4-f5a6-7890-bcde-f12345678901\"}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/api/deployments/",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 4200,
+    "Timestamp": "2026-09-08T21:02:59.892Z",
+    "Scheme": "http",
+    "scenarioName": "delete_deployment_unauthorized",
+    "UniqueFields": [
+      "name"
+    ]
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "",
+    "ResponseBody": "{\"detail\": \"Valid X-Admin-Key header required for this operation.\"}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "DELETE",
+    "Path": "/api/deployments/c2d3e4f5-a6b7-8901-cdef-123456789012",
+    "QueryParams": {},
+    "StatusCode": 401,
+    "Port": 4200,
+    "Timestamp": "2026-09-08T21:03:00.892Z",
+    "Scheme": "http",
+    "scenarioName": "delete_deployment_unauthorized"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "localhost",
+    "RequestBody": "",
+    "ResponseBody": "{\"id\": \"c2d3e4f5-a6b7-8901-cdef-123456789012\", \"name\": \"test-deployment-auth-boundary\"}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "GET",
+    "Path": "/api/deployments/c2d3e4f5-a6b7-8901-cdef-123456789012",
+    "QueryParams": {},
+    "StatusCode": 200,
+    "Port": 4200,
+    "Timestamp": "2026-09-08T21:03:01.892Z",
+    "Scheme": "http",
+    "scenarioName": "delete_deployment_unauthorized"
+  }
+]
