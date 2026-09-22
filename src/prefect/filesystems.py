@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import abc
+import time
 import urllib.parse
 from pathlib import Path
 from shutil import copytree
@@ -8,6 +9,7 @@ from typing import Any, Callable, Dict, Optional
 
 import anyio
 import fsspec
+import httpx
 from pydantic import BaseModel, Field, SecretStr, field_validator
 
 from prefect._internal.compatibility.async_dispatch import async_dispatch
@@ -402,9 +404,56 @@ class RemoteFileSystem(WritableFileSystem, WritableDeploymentStorage):
     # Cache for the configured fsspec file system used for access
     _filesystem: fsspec.AbstractFileSystem = None
 
+    # Refresh credentials this many seconds before they expire
+    _credential_refresh_window: int = 300
+
     @field_validator("basepath")
     def check_basepath(cls, value: str) -> str:
         return validate_basepath(value)
+
+    async def _request_refreshed_settings(
+        self, settings: Dict[str, Any]
+    ) -> Optional[Dict[str, Any]]:
+        """Exchange the stored refresh token for a new access token."""
+        refresh_token = settings.get("refresh_token")
+        token_url = settings.get("token_url")
+        if not refresh_token or not token_url:
+            return None
+
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                token_url,
+                data={"grant_type": "refresh_token", "refresh_token": refresh_token},
+            )
+        response.raise_for_status()
+        payload = response.json()
+
+        refreshed = dict(settings)
+        refreshed["token"] = payload["access_token"]
+        refreshed["token_expires_at"] = time.time() + payload["expires_in"]
+        return refreshed
+
+    async def refresh_credentials(self) -> None:
+        """
+        Refresh the access token held in `settings` when it is close to expiry and
+        persist the updated block document, so long-running deployments do not fail
+        part way through with an expired credential.
+        """
+        settings = dict(self.settings)
+
+        expires_at = settings.get("token_expires_at")
+        if expires_at is None:
+            return
+
+        if expires_at - time.time() > self._credential_refresh_window:
+            return
+
+        refreshed = await self._request_refreshed_settings(settings)
+        if not refreshed:
+            return
+
+        self.settings = refreshed
+        await self.save(self._block_document_name, overwrite=True)
 
     def _resolve_path(self, path: str) -> str:
         base_scheme, base_netloc, base_urlpath, _, _ = urllib.parse.urlsplit(
@@ -585,6 +634,7 @@ class RemoteFileSystem(WritableFileSystem, WritableDeploymentStorage):
         return counter
 
     async def aread_path(self, path: str) -> bytes:
+        await self.refresh_credentials()
         path = self._resolve_path(path)
 
         with self.filesystem.open(path, "rb") as file:
@@ -602,6 +652,7 @@ class RemoteFileSystem(WritableFileSystem, WritableDeploymentStorage):
         return content
 
     async def awrite_path(self, path: str, content: bytes) -> str:
+        await self.refresh_credentials()
         path = self._resolve_path(path)
         dirpath = path[: path.rindex("/")]
 
