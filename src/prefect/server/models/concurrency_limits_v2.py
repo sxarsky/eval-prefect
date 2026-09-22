@@ -304,3 +304,40 @@ async def bulk_update_denied_slots(
 
     result = await session.execute(query)
     return result.rowcount == len(concurrency_limit_ids)
+
+
+@db_injector
+async def try_acquire_slots_by_name(
+    db: PrefectDBInterface,
+    session: AsyncSession,
+    name: str,
+    slots: int = 1,
+) -> Optional[tuple[bool, int]]:
+    """
+    Try to acquire ``slots`` against the concurrency limit identified by ``name``.
+
+    This is a convenience for callers that hold a single limit name (rather than
+    an id) and want a non-throwing, all-or-nothing acquire against one limit. It
+    returns a ``(acquired, remaining_slots)`` tuple describing the outcome, where
+    ``remaining_slots`` is the free capacity on the limit after the attempt, or
+    ``None`` when no active limit exists for ``name``.
+
+    The request is granted only when the limit currently has enough free capacity
+    for the full number of requested slots; partial acquisition is never
+    performed.
+    """
+    limit = await read_concurrency_limit(session, name=name)
+    if limit is None or not limit.active:
+        return None
+
+    available = limit.limit - limit.active_slots
+    if slots > available:
+        return False, max(available, 0)
+
+    await session.execute(
+        sa.update(db.ConcurrencyLimitV2)
+        .where(db.ConcurrencyLimitV2.id == limit.id)
+        .values(active_slots=limit.active_slots + slots)
+    )
+
+    return True, limit.limit - (limit.active_slots + slots)

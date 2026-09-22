@@ -166,6 +166,11 @@ class ConcurrencyLimitWithLeaseResponse(PrefectBaseModel):
     limits: list[MinimalConcurrencyLimitResponse]
 
 
+class ConcurrencySlotAcquisitionResponse(PrefectBaseModel):
+    acquired: bool
+    remaining_slots: int
+
+
 async def _acquire_concurrency_slots(
     session: AsyncSession,
     names: List[str],
@@ -312,6 +317,37 @@ async def bulk_increment_active_slots(
                 limits=acquired_limits,
                 slots=slots,
             )
+
+
+@router.post("/try-acquire", status_code=status.HTTP_200_OK)
+async def try_acquire_concurrency_slots(
+    name: str = Body(..., description="The name of the concurrency limit"),
+    slots: int = Body(1, gt=0),
+    db: PrefectDBInterface = Depends(provide_database_interface),
+) -> ConcurrencySlotAcquisitionResponse:
+    """
+    Attempt to acquire slots against a single named concurrency limit.
+
+    This endpoint never raises when capacity is unavailable: it returns whether
+    the requested slots were granted along with the number of slots still free
+    on the limit. This suits callers that want to probe-and-reserve a single
+    named limit without handling a 423 response.
+    """
+    async with db.session_context(begin_transaction=True) as session:
+        result = await models.concurrency_limits_v2.try_acquire_slots_by_name(
+            session=session, name=name, slots=slots
+        )
+
+    if result is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Concurrency Limit not found",
+        )
+
+    acquired, remaining_slots = result
+    return ConcurrencySlotAcquisitionResponse(
+        acquired=acquired, remaining_slots=remaining_slots
+    )
 
 
 @router.post("/increment-with-lease", status_code=status.HTTP_200_OK)
