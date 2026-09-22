@@ -808,6 +808,14 @@ class BlockDocument(ORMBaseModel):
     data: dict[str, Any] = Field(
         default_factory=dict, description="The block document's data"
     )
+    field_summaries: dict[str, str] = Field(
+        default_factory=dict,
+        description=(
+            "A per-field string summary of the block document's top-level values,"
+            " provided so list views can render field previews without an extra"
+            " request."
+        ),
+    )
     block_schema_id: UUID = Field(default=..., description="A block schema ID")
     block_schema: Optional[BlockSchema] = Field(
         default=None, description="The associated block schema"
@@ -844,6 +852,9 @@ class BlockDocument(ORMBaseModel):
         include_secrets: bool = False,
     ) -> Self:
         data = await orm_block_document.decrypt_data(session=session)
+        # Capture the resolved top-level field values so we can surface a compact
+        # per-field preview for list views without requiring a second request.
+        resolved_values = dict(data)
         # if secrets are not included, obfuscate them based on the schema's
         # `secret_fields`. Note this walks any nested blocks as well. If the
         # nested blocks were recovered from named blocks, they will already
@@ -869,12 +880,16 @@ class BlockDocument(ORMBaseModel):
                         if secret_key[0:wildcard_index] == data_key[0:wildcard_index]:
                             flat_data[data_key] = obfuscate(flat_data[data_key])
             data = flatdict_to_dict(flat_data)
+        field_summaries = {
+            key: str(value) for key, value in resolved_values.items()
+        }
         return cls(
             id=orm_block_document.id,
             created=orm_block_document.created,
             updated=orm_block_document.updated,
             name=orm_block_document.name,
             data=data,
+            field_summaries=field_summaries,
             block_schema_id=orm_block_document.block_schema_id,
             block_schema=orm_block_document.block_schema,
             block_type_id=orm_block_document.block_type_id,
