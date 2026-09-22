@@ -672,6 +672,16 @@ def is_state_iterable(obj: Any) -> TypeGuard[Iterable[State]]:
         return False
 
 
+# States in which a run has entered its execution lifecycle but has not yet
+# settled into a terminal state. Used to report how many runs in a group are
+# still progressing (as opposed to merely scheduled or already finished).
+IN_PROGRESS_STATES: set[StateType] = {
+    StateType.PENDING,
+    StateType.RUNNING,
+    StateType.PAUSED,
+}
+
+
 class StateGroup:
     def __init__(self, states: list[State]) -> None:
         self.states: list[State] = states
@@ -681,6 +691,9 @@ class StateGroup:
         self.final_count: int = sum(state.is_final() for state in states)
         self.not_final_count: int = self.total_count - self.final_count
         self.paused_count: int = self.type_counts[StateType.PAUSED]
+        self.in_progress_count: int = sum(
+            self.type_counts[state_type] for state_type in IN_PROGRESS_STATES
+        )
 
     @property
     def fail_count(self) -> int:
@@ -700,6 +713,9 @@ class StateGroup:
 
     def any_paused(self) -> bool:
         return self.paused_count > 0
+
+    def any_in_progress(self) -> bool:
+        return self.in_progress_count > 0
 
     def all_final(self) -> bool:
         return self.final_count == self.total_count
