@@ -688,7 +688,11 @@ async def count_deployments(
         )
 
 
-@router.delete("/{id:uuid}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete(
+    "/{id:uuid}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    dependencies=[Depends(dependencies.require_admin_key)],
+)
 async def delete_deployment(
     deployment_id: UUID = Path(..., description="The deployment id", alias="id"),
     db: PrefectDBInterface = Depends(provide_database_interface),
