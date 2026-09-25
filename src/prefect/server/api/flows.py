@@ -105,6 +105,23 @@ async def read_flow_by_name(
     return flow
 
 
+@router.get("/recent")
+async def read_recent_flows(
+    db: PrefectDBInterface = Depends(provide_database_interface),
+) -> List[schemas.core.Flow]:
+    """
+    Get the most recently created flows, ordered by created_at descending,
+    capped at 10 records.
+    """
+    async with db.session_context() as session:
+        return await models.flows.read_flows(
+            session=session,
+            sort=schemas.sorting.FlowSort.CREATED_DESC,
+            offset=0,
+            limit=10,
+        )
+
+
 @router.get("/{id:uuid}")
 async def read_flow(
     flow_id: UUID = Path(..., description="The flow id", alias="id"),
