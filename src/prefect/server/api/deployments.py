@@ -50,6 +50,31 @@ logger: logging.Logger = get_logger(__name__)
 router: PrefectRouter = PrefectRouter(prefix="/deployments", tags=["Deployments"])
 
 
+async def _count_active_deployment_runs(
+    session, deployment_id: UUID
+) -> int:
+    """
+    Count active flow runs for a deployment to enforce ``concurrency_limit``.
+
+    A run is considered "active" when it is occupying a deployment slot --
+    i.e. waiting to start. Completed/cancelled/crashed runs no longer occupy
+    a slot.
+    """
+    return await models.flow_runs.count_flow_runs(
+        session=session,
+        flow_run_filter=schemas.filters.FlowRunFilter(
+            deployment_id=schemas.filters.FlowRunFilterDeploymentId(
+                any_=[deployment_id]
+            ),
+            state=schemas.filters.FlowRunFilterState(
+                type=schemas.filters.FlowRunFilterStateType(
+                    any_=[schemas.states.StateType.PENDING]
+                )
+            ),
+        ),
+    )
+
+
 def _multiple_schedules_error(deployment_id) -> HTTPException:
     return HTTPException(
         status.HTTP_422_UNPROCESSABLE_ENTITY,
@@ -974,6 +999,19 @@ async def create_flow_run_from_deployment(
 
         if not flow_run.state:
             flow_run.state = schemas.states.Scheduled()
+
+        if deployment.concurrency_limit is not None:
+            active = await _count_active_deployment_runs(
+                session=session, deployment_id=deployment.id
+            )
+            if active >= deployment.concurrency_limit:
+                raise HTTPException(
+                    status_code=status.HTTP_409_CONFLICT,
+                    detail=(
+                        f"Deployment {deployment.id} has reached its concurrency"
+                        f" limit of {deployment.concurrency_limit} active run(s)."
+                    ),
+                )
 
         right_now = now("UTC")
         model = await models.flow_runs.create_flow_run(
