@@ -119,9 +119,7 @@ F = TypeVar("F", bound="Flow[Any, Any]")  # The type of the flow
 
 
 class FlowStateHook(Protocol, Generic[P, R]):
-    """
-    A callable that is invoked when a flow enters a given state.
-    """
+    """A callable that is invoked when a flow enters a given state."""
 
     __name__: str
 
@@ -431,9 +429,10 @@ class Flow(Generic[P, R]):
 
     def __get__(self, instance: Any, owner: Any) -> "Flow[P, R]":
         """
-        Implement the descriptor protocol so that the flow can be used as an instance or class method.
-        When an instance method is loaded, this method is called with the "self" instance as
-        an argument. We return a copy of the flow with that instance bound to the flow's function.
+        Implement the descriptor protocol so the flow can be used as an instance or class method.
+
+        When an instance method is loaded, this method is called with the ``self`` instance as
+        an argument. Returns a copy of the flow with that instance bound to the flow's function.
         """
         # wrapped function is a classmethod
         if self.isclassmethod:
