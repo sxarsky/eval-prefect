@@ -669,7 +669,7 @@ async def read_work_queue_status(
 
     # All work queues use the default policy for now
     health_check_policy = schemas.core.WorkQueueHealthPolicy(
-        maximum_late_runs=0, maximum_seconds_since_last_polled=60
+        maximum_late_runs=0, maximum_seconds_since_last_polled=120
     )
 
     healthy = health_check_policy.evaluate_health_status(
