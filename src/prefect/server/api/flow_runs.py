@@ -666,6 +666,69 @@ async def bulk_delete_flow_runs(
     return FlowRunBulkDeleteResponse(deleted=deleted_ids)
 
 
+BULK_CANCEL_MAX = 100
+
+# Cancellable states per docstring: PENDING, RUNNING, SCHEDULED, PAUSED.
+_CANCELLABLE_STATES = {
+    schemas.states.StateType.PENDING,
+    schemas.states.StateType.SCHEDULED,
+    schemas.states.StateType.PAUSED,
+}
+
+
+@router.post("/bulk_cancel")
+async def bulk_cancel_flow_runs(
+    flow_run_ids: List[UUID] = Body(..., description="Flow run IDs to cancel"),
+    reason: Optional[str] = Body(None, description="Optional reason for the cancellation"),
+    db: PrefectDBInterface = Depends(provide_database_interface),
+) -> Dict[str, List[Any]]:
+    """
+    Cancel multiple flow runs in a single request.
+
+    Each ID in `flow_run_ids` is processed independently. Runs that are in a
+    cancellable state (PENDING, RUNNING, SCHEDULED, PAUSED) are transitioned
+    to CANCELLING and returned in `cancelled`. Runs in non-cancellable states
+    are returned in `skipped`. Missing or unknown IDs are returned in `errors`.
+
+    Maximum batch size: up to 100 IDs per request.
+    """
+    if len(flow_run_ids) >= BULK_CANCEL_MAX:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=f"Batch size exceeds the bulk-cancel limit of {BULK_CANCEL_MAX}.",
+        )
+
+    cancelled: List[UUID] = []
+    skipped: List[UUID] = []
+    errors: List[UUID] = []
+
+    cancelling_state = schemas.states.Cancelling(message=reason or "Bulk cancel requested")
+
+    async with db.session_context(begin_transaction=True) as session:
+        for flow_run_id in flow_run_ids:
+            run = await models.flow_runs.read_flow_run(
+                session=session, flow_run_id=flow_run_id
+            )
+            if run is None:
+                errors.append(flow_run_id)
+                continue
+
+            current_type = run.state.type if run.state else None
+            if current_type not in _CANCELLABLE_STATES:
+                skipped.append(flow_run_id)
+                continue
+
+            await models.flow_runs.set_flow_run_state(
+                session=session,
+                flow_run_id=flow_run_id,
+                state=cancelling_state,
+                force=True,
+            )
+            cancelled.append(flow_run_id)
+
+    return {"cancelled": cancelled, "skipped": skipped, "errors": errors}
+
+
 @router.post("/bulk_set_state")
 async def bulk_set_flow_run_state(
     flow_runs: Optional[schemas.filters.FlowRunFilter] = Body(
